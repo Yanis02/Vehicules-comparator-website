@@ -12,13 +12,13 @@
     align-items: center;
   }
 .header {
-    padding: 15px;
+    padding: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     color: #F41F11;
-    font-size: 20px;
+    font-size: 30px;
     height: 40px;
     width:100%;
     overflow: hidden;

@@ -5,5 +5,7 @@ $controllerModel->showHead();
 $controllerModel->showHeader();
 $controllerModel->displayNewsSection();
 $controllerModel->showNavbar();
+$controllerModel->showMarquesSection();
+$controllerModel->showSeparator();
 
 ?>

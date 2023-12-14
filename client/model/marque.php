@@ -1,4 +1,5 @@
 <?php
+
 require_once("database.php");
 
 class MarqueModel
@@ -13,31 +14,32 @@ class MarqueModel
                   FROM marques 
                   LEFT JOIN images ON marques.idImage = images.id";
 
-        $result = £db->request($conn,$query);
+        $marquesData = $db->request($conn, $query);
+        $db->disconnectDb($conn);
 
-        if ($result->num_rows > 0) {
-            // Fetch data from the result set
-            $marques = [];
-            while ($row = $result->fetch_assoc()) {
-                $marques[] = [
-                    'id' => $row['id'],
-                    'nom' => $row['nom'],
-                    'pays' => $row['pays'],
-                    'siege' => $row['siege'],
-                    'anne_creation' => $row['anne_creation'],
-                    'image' => $row['chemin'],
-                ];
+        $result = array();
+        foreach ($marquesData as $item) {
+            $marqueId = $item['id'];
+            if (!isset($result[$marqueId])) {
+                $result[$marqueId] = array(
+                    'id' => $item['id'],
+                    'nom' => $item['nom'],
+                    'pays' => $item['pays'],
+                    'siege' => $item['siege'],
+                    'anne_creation' => $item['anne_creation'],
+                    'images' => array()
+                );
             }
 
-            $$db->disconnectDb();
-
-            return $marques;
-        } else {
-            return [];
+            if (!empty($item['chemin'])) {
+                $result[$marqueId]['images'][] = $item['chemin'];
+            }
         }
+
+        return array_values($result); 
     }
 }
+?>
 
 
-
- ?>
+ 

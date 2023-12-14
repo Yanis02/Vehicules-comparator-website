@@ -1,5 +1,6 @@
 <?php
 require_once("./model/news.php");
+require_once("./model/marque.php");
 require_once("./view/accueil.php");
 
 class accueilController{
@@ -15,6 +16,12 @@ class accueilController{
     $accuilModel=new accueil();
     $accuilModel->navBar();
    }
+   public function showMarquesSection(){
+    $accuilModel=new accueil();
+    $marquesModel=new marqueModel();
+    $marques=$marquesModel->getAllMarques();
+    $accuilModel->marquesSection($marques);
+   }
 
     public function displayNewsSection(){
 
@@ -22,6 +29,10 @@ class accueilController{
         $news=$newsModel->getAllNews();
         $accuilModel=new accueil();
         $accuilModel->newsSection($news);
+    }
+    public function showSeparator(){
+        $accuilModel=new accueil();
+        $accuilModel->separator();
     }
 
 }

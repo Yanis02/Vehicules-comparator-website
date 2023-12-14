@@ -2,10 +2,10 @@
 class database{
 
 
- private $servername = "localhost";
+ private $servername = "127.0.0.1";
  private $usernamedb = "root";
  private $passworddb = "yanis";
- private $database = "projet_tdw";
+ private $database = "database_tdw";
 
  public function connectDb() {
     $dsn = "mysql:host=" . $this->servername . ";dbname=" . $this->database;
