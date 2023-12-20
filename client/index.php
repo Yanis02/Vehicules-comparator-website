@@ -7,5 +7,6 @@ $controllerModel->displayNewsSection();
 $controllerModel->showNavbar();
 $controllerModel->showMarquesSection();
 $controllerModel->showSeparator();
+$controllerModel->showComp();
 
 ?>

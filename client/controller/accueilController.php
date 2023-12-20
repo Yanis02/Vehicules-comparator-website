@@ -34,5 +34,11 @@ class accueilController{
         $accuilModel=new accueil();
         $accuilModel->separator();
     }
+    public function showComp(){
+        $accuilModel=new accueil();
+        $marquesModel=new marqueModel();
+        $marques=$marquesModel->getAllMarques();
+         $accuilModel->comparaison($marques);
+    }
 
 }
