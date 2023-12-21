@@ -1,10 +1,27 @@
 <?php
-require_once("modele.php");
-$modeleModel = new ModeleModel();
+require_once("database.php");
 
-// Check if marqueId is set in the POST data
-if (isset($_POST['marqueId'])) {
-    $marqueId = $_POST['marqueId'];
-    $modeleModel->getModelesByMarqueId($marqueId);
+class VehiculeModel
+{
+    public function getAnneeByVersionId($versionId)
+    {
+        $db = new Database();
+        $conn = $db->connectDb();
+
+        $query = "SELECT id, annee FROM vehicule WHERE idVersion = $versionId";
+
+        $modelesData = $db->request($conn, $query);
+        $db->disconnectDb($conn);
+
+        header('Content-Type: application/json');
+
+        echo json_encode($modelesData);
+    }
+}
+$modeleModel = new VehiculeModel();
+
+if (isset($_POST['versionId'])) {
+    $versionId = $_POST['versionId'];
+    $modeleModel->getAnneeByVersionId($versionId);
 }
  ?>

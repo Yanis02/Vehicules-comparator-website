@@ -111,19 +111,3 @@ ul li a {
      color: #C6C3C3;
 }
 
-.comparaison_container{
-  width: 90%;
-  height: 1000px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-}
-.comparaison_form{
-  width: 400px;
-  height: 500px;
-  border: #F41F11;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 10px;
-}

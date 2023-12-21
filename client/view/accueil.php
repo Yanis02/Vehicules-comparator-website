@@ -158,12 +158,12 @@ public function header(){
 {
     ?>
     <h1 style="margin-top:50px;text-align:center">Comparez vos vehicules</h1>
-    <form id="comparisonForm" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px">
-        <div style="margin-left:5%;padding-top:50px;width: 90%; display: flex; flex-direction: row; justify-content: space-around; align-items: center;" class="comparaison_container">
+    <form id="comparisonForm" style="margin-top:50px;margin-left:5%;width: 90%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px;">
+        <div style=" display: flex; flex-direction: row; height:fit-content; justify-content: space-around; align-items: center;" class="comparaison_container">
             <?php for ($i = 0; $i < 4; $i++) : ?>
                 <div id="container_<?php echo $i; ?>" style="width: 300px; height: 400px; border: 2px solid #F41F11; border-radius: 10px;display:flex;flex-direction:column;justify-content:space-around;align-items:center">
                     <!-- Marque Dropdown 54-->
-                    <select id="marque_<?php echo $i; ?>" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this, <?php echo $i; ?>)">
+                    <select name="marque_<?php echo $i; ?>" id="marque_<?php echo $i; ?>" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this, <?php echo $i; ?>)">
                         <option value="">Marque</option>
                         <?php foreach ($marques as $marque) : ?>
                             <option value='<?php echo $marque['id']; ?>'><?php echo $marque['nom']; ?></option>
@@ -171,13 +171,17 @@ public function header(){
                     </select>
 
                     <!-- Modele Dropdown -->
-                    <select id="modele_<?php echo $i; ?>" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this, <?php echo $i; ?>)" disabled>
+                    <select name="modele_<?php echo $i; ?>" id="modele_<?php echo $i; ?>" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this, <?php echo $i; ?>)" disabled>
                         <option value="">Modele</option>
                     </select>
 
                     <!-- Version Dropdown -->
-                    <select id="version_<?php echo $i; ?>" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" disabled>
+                    <select name="version_<?php echo $i; ?>" id="version_<?php echo $i; ?>" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateAnnee(this, <?php echo $i; ?>)" disabled>
                         <option value="">Version</option>
+                    </select>
+                    <!-- Annee Dropdown -->
+                    <select name="annee_<?php echo $i; ?>" id="annee_<?php echo $i; ?>" class="anneeDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" disabled>
+                        <option value="">Annee</option>
                     </select>
                 </div>
             <?php endfor; ?>
@@ -239,6 +243,32 @@ public function header(){
                 }
             });
         }
+        function updateAnnee(element, containerIndex) {
+            var container = $("#container_" + containerIndex);
+            var modeleId = $(element).val();
+            console.log(modeleId);
+
+            var versionDropdown = container.find('.anneeDropdown');
+            
+            $.ajax({
+                type: "POST",
+                url: "./model/vehicule.php",
+                data: { versionId: modeleId },
+                dataType: "json",
+                success: function (data) {
+                    versionDropdown.empty();
+                    versionDropdown.append('<option value="">Annee</option>');
+                    $.each(data, function (index, version) {
+                        versionDropdown.append($("<option>").attr("value", version.id).text(version.annee));
+                    });
+                    versionDropdown.prop("disabled", false);
+                },
+                error: function (xhr, status, error) {
+                    console.log("failed");
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
         function isSelected(num){
             const marque=$(`#marque_${num}`);
             if(marque.val()) return true;
@@ -248,24 +278,27 @@ public function header(){
          const marque=$(`#marque_${num}`);
          const modele=$(`#modele_${num}`);
          const version=$(`#version_${num}`);
-         if(marque.val() && modele.val() && version.val()  ) return true;
+         const annee=$(`#annee_${num}`);
+         if(marque.val() && modele.val() && version.val() && annee.val()  ) return true;
          else return false;
         }
         function submitForm() {
-    let readyCount = 0;
-
+    let cpt = 0;
+    let data=[];
     for (let index = 0; index < 4; index++) {
         if (isReady(index)) {
-            readyCount++;
+            data.push($(`#version_${index}`).val());
+            cpt++;
         } else if (isSelected(index)) {
             alert("Please fill in all fields.");
-            return; // Stop processing if an alert is shown
+            return;
         }
     }
 
-    if (readyCount >= 2) {
-        $('#comparisonForm').submit();
+    if (cpt >= 2) {
+        //$('#comparisonForm').submit();
         console.log("passed");
+       console.log(data);
     } else {
         alert("Please enter at least 2 vehicles.");
     }
