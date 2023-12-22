@@ -13,12 +13,12 @@ public function navBar(){
  
  <div class="navbar">
     <ul>
-        <li><a href="">Accueil</a></li>
-        <li><a href="">Marques</a></li>
-        <li><a href="">Comparateur</a></li>
-        <li><a href="">News</a></li>
-        <li><a href="">Guides d'achats</a></li>
-        <li><a href="">Contact</a></li>
+        <li><a href="./index.php?action=home">Accueil</a></li>
+        <li><a href="./index.php?action=marques">Marques</a></li>
+        <li><a href="./index.php?action=comparateur">Comparateur</a></li>
+        <li><a href="./index.php?action=news">News</a></li>
+        <li><a href="./index.php?action=guide">Guides d'achats</a></li>
+        <li><a href="./index.php?action=contact">Contact</a></li>
 
 
     </ul>
@@ -154,12 +154,13 @@ public function header(){
         <div style="width:90%;height:5px;background-color:#F41F11;margin-top:50px;"></div></div>
         <?php
     }
-    public function comparaison($marques)
-{
-    ?>
+    
+    public function comparaisonPage($marques){
+        ?>
+    <div style="display:flex;flex-direction:column;align-items-center;width:100%;">
     <h1 style="margin-top:50px;text-align:center">Comparez vos vehicules</h1>
-    <form id="comparisonForm" style="margin-top:50px;margin-left:5%;width: 90%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px;">
-        <div style=" display: flex; flex-direction: row; height:fit-content; justify-content: space-around; align-items: center;" class="comparaison_container">
+    <form  method="post" action="./index.php?action=comparateur" id="comparisonForm" style="margin-top:50px;margin-left:5%;width: 90%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px;">
+        <div style="width:100%; display: flex; flex-direction: row; height:fit-content; justify-content: space-around; align-items: center;" class="comparaison_container">
             <?php for ($i = 0; $i < 4; $i++) : ?>
                 <div id="container_<?php echo $i; ?>" style="width: 300px; height: 400px; border: 2px solid #F41F11; border-radius: 10px;display:flex;flex-direction:column;justify-content:space-around;align-items:center">
                     <!-- Marque Dropdown 54-->
@@ -186,9 +187,24 @@ public function header(){
                 </div>
             <?php endfor; ?>
         </div>
-        <button type="button" onclick="submitForm()" style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
+        <button type="button" onclick="submitForm()"    style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
     </form>
-    <script>
+      <div class="d-flex justify-content-around mt-5 " id="cardContainer"></div>
+    <div class="d-flex justify-content-center mt-5" id="table_container" >
+    <table class="table table-bordered table-sm w-50">
+   <thead>
+                <tr id="lineOne" class="firstRow">                   
+                </tr>
+            </thead>
+            <tbody id="tbody">
+           </tbody>
+  </table>
+   </div>
+    </div>
+    
+ <script>
+ 
+ 
         function updateModeles(element, containerIndex) {
             var container = $("#container_" + containerIndex);
             var marqueId = $(element).val();
@@ -282,32 +298,354 @@ public function header(){
          if(marque.val() && modele.val() && version.val() && annee.val()  ) return true;
          else return false;
         }
+      
         function submitForm() {
-    let cpt = 0;
-    let data=[];
-    for (let index = 0; index < 4; index++) {
+         let cpt = 0;
+    
+     let data=[];
+     for (let index = 0; index < 4; index++) {
+        
         if (isReady(index)) {
-            data.push($(`#version_${index}`).val());
+            let res={marque:"",modele:"",version:"",id:""};
+            res.marque=$(`#marque_${index}`).val();
+            res.modele=$(`#modele_${index}`).val();
+            res.version=$(`#version_${index}`).val();
+            res.id=$(`#annee_${index}`).val();
+            data.push(res);
             cpt++;
         } else if (isSelected(index)) {
             alert("Please fill in all fields.");
             return;
         }
-    }
+     }
 
-    if (cpt >= 2) {
+     if (cpt >= 2) {
+        //
+        console.log("passed");
+       console.log(data);
+       result=[];
+       var promises = data.map(element => {
+     return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: "./model/vehiculeCaracteristique.php",
+            data: {
+                idMarque: element.marque,
+                idModele: element.modele,
+                idVersion: element.version,
+                idVehicule: element.id
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                result.push(response);
+                resolve(); 
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+                reject(); 
+            }
+        });
+     });
+     });
+
+      Promise.all(promises)
+        .then(() => {
+        console.log("result", result);
+        if (result.length > 1) {
+            $('#cardContainer').empty();
+            console.log(result);
+            sessionStorage.setItem('data', JSON.stringify(result));
+            $('#comparisonForm').submit();
+        }
+     })
+     .catch(() => {
+        console.log("One or more AJAX requests failed");
+     });
+     } else {
+        alert("Please enter at least 2 vehicles.");
+     }
+        }        
+    </script> 
+    <?php
+    }
+    public function comparaison($marques,$carac)
+{
+    ?>
+    <div style="display:flex;flex-direction:column;align-items-center;width:100%;">
+    <h1 style="margin-top:50px;text-align:center">Comparez vos vehicules</h1>
+    <form id="comparisonForm" style="margin-top:50px;margin-left:5%;width: 90%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px;">
+        <div style="width:100%; display: flex; flex-direction: row; height:fit-content; justify-content: space-around; align-items: center;" class="comparaison_container">
+            <?php for ($i = 0; $i < 4; $i++) : ?>
+                <div id="container_<?php echo $i; ?>" style="width: 300px; height: 400px; border: 2px solid #F41F11; border-radius: 10px;display:flex;flex-direction:column;justify-content:space-around;align-items:center">
+                    <!-- Marque Dropdown 54-->
+                    <select name="marque_<?php echo $i; ?>" id="marque_<?php echo $i; ?>" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this, <?php echo $i; ?>)">
+                        <option value="">Marque</option>
+                        <?php foreach ($marques as $marque) : ?>
+                            <option value='<?php echo $marque['id']; ?>'><?php echo $marque['nom']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <!-- Modele Dropdown -->
+                    <select name="modele_<?php echo $i; ?>" id="modele_<?php echo $i; ?>" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this, <?php echo $i; ?>)" disabled>
+                        <option value="">Modele</option>
+                    </select>
+
+                    <!-- Version Dropdown -->
+                    <select name="version_<?php echo $i; ?>" id="version_<?php echo $i; ?>" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateAnnee(this, <?php echo $i; ?>)" disabled>
+                        <option value="">Version</option>
+                    </select>
+                    <!-- Annee Dropdown -->
+                    <select name="annee_<?php echo $i; ?>" id="annee_<?php echo $i; ?>" class="anneeDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" disabled>
+                        <option value="">Annee</option>
+                    </select>
+                </div>
+            <?php endfor; ?>
+        </div>
+        <button type="button" onclick="submitForm()" style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
+    </form>
+      <div class="d-flex justify-content-around mt-5 " id="cardContainer"></div>
+    <div class="d-flex justify-content-center mt-5" id="table_container" >
+    <table class="table table-bordered table-sm w-50">
+   <thead>
+                <tr id="lineOne" class="firstRow">                   
+                </tr>
+            </thead>
+            <tbody id="tbody">
+           </tbody>
+  </table>
+   </div>
+    </div>
+    <script>
+$(document).ready(function () {
+    var storedData = sessionStorage.getItem('data');
+
+var result = JSON.parse(storedData);
+if(result!=null){
+    displayTable(result);
+    result.forEach(element => {
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
+            });
+    sessionStorage.removeItem('data');
+}
+})
+
+ function displayCard(imageSrc, cardTitle, buttonText,id) {
+   
+
+    var card = $('<div>').addClass('card').css('width', '18rem');
+
+    var cardImage = $('<img>').addClass('card-img-top').attr('src', imageSrc).attr('alt', 'Card Image');
+
+    var cardBody = $('<div>').addClass('card-body');
+
+    var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
+
+    var button = $('<a>').addClass('btn btn-primary').attr('href', "./index.php?action=detailVehicule").text(buttonText).css('background-color', '#F41F11');
+
+    cardBody.append(cardTitleElement, button);
+
+    card.append(cardImage, cardBody);
+
+    // Append the new card to #cardContainer
+    $('#cardContainer').append(card);
+ }
+
+        function updateModeles(element, containerIndex) {
+            var container = $("#container_" + containerIndex);
+            var marqueId = $(element).val();
+            console.log(marqueId);
+            
+            var modeleDropdown = container.find('.modeleDropdown');
+            
+            $.ajax({
+                type: "POST",
+                url: "./model/modele.php",
+                data: { marqueId: marqueId },
+                dataType: "json",
+                success: function (data) {
+                    console.log("success");
+                    modeleDropdown.empty();
+                    modeleDropdown.append('<option value="">Modele</option>');
+                    $.each(data, function (index, modele) {
+                        modeleDropdown.append($("<option>").attr("value", modele.id).text(modele.nom));
+                    });
+                    modeleDropdown.prop("disabled", false);
+                },
+                error: function (xhr, status, error) {
+                    console.log("failed");
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
+
+        function updateVersions(element, containerIndex) {
+            var container = $("#container_" + containerIndex);
+            var modeleId = $(element).val();
+            console.log(modeleId);
+
+            var versionDropdown = container.find('.versionDropdown');
+            
+            $.ajax({
+                type: "POST",
+                url: "./model/version.php",
+                data: { modeleId: modeleId },
+                dataType: "json",
+                success: function (data) {
+                    versionDropdown.empty();
+                    versionDropdown.append('<option value="">Version</option>');
+                    $.each(data, function (index, version) {
+                        versionDropdown.append($("<option>").attr("value", version.id).text(version.nom));
+                    });
+                    versionDropdown.prop("disabled", false);
+                },
+                error: function (xhr, status, error) {
+                    console.log("failed");
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
+        function updateAnnee(element, containerIndex) {
+            var container = $("#container_" + containerIndex);
+            var modeleId = $(element).val();
+            console.log(modeleId);
+
+            var versionDropdown = container.find('.anneeDropdown');
+            
+            $.ajax({
+                type: "POST",
+                url: "./model/vehicule.php",
+                data: { versionId: modeleId },
+                dataType: "json",
+                success: function (data) {
+                    versionDropdown.empty();
+                    versionDropdown.append('<option value="">Annee</option>');
+                    $.each(data, function (index, version) {
+                        versionDropdown.append($("<option>").attr("value", version.id).text(version.annee));
+                    });
+                    versionDropdown.prop("disabled", false);
+                },
+                error: function (xhr, status, error) {
+                    console.log("failed");
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        }
+        function isSelected(num){
+            const marque=$(`#marque_${num}`);
+            if(marque.val()) return true;
+            else return false;
+        }
+        function isReady(num){
+         const marque=$(`#marque_${num}`);
+         const modele=$(`#modele_${num}`);
+         const version=$(`#version_${num}`);
+         const annee=$(`#annee_${num}`);
+         if(marque.val() && modele.val() && version.val() && annee.val()  ) return true;
+         else return false;
+        }
+        function displayTable(data){
+         var $table = $("table"); 
+         $table.find("tbody").empty(); 
+         var $thead = $table.find("thead");
+         $thead.empty();
+         var headerRow = '<tr class="firstRow"><th scope="col">Features</th>';
+         data.forEach(element => {
+            headerRow += '<th>' + element.vehicule_name + '</th>';  
+         });
+         headerRow += '</tr>';
+         $thead.append(headerRow);
+         var $tbody = $table.find("tbody");
+         data[0].characteristics.forEach(feature => {
+            var featureRow = '<tr><th class="firstcol" scope="row">' + feature.nom + '</th>';
+            data.forEach(element => {
+                let values=[];
+               values.push(element.characteristics_values[feature.id]);
+               for (let index = 0; index < values.length; index++) {
+                    featureRow += '<td>' + values[index] + '</td>';
+                }        
+            
+
+            });
+            featureRow += '</tr>';
+            $tbody.append(featureRow);
+         });
+        
+        }
+ function submitForm() {
+         let cpt = 0;
+    
+     let data=[];
+     for (let index = 0; index < 4; index++) {
+        
+        if (isReady(index)) {
+            let res={marque:"",modele:"",version:"",id:""};
+            res.marque=$(`#marque_${index}`).val();
+            res.modele=$(`#modele_${index}`).val();
+            res.version=$(`#version_${index}`).val();
+            res.id=$(`#annee_${index}`).val();
+            data.push(res);
+            cpt++;
+        } else if (isSelected(index)) {
+            alert("Please fill in all fields.");
+            return;
+        }
+     }
+
+     if (cpt >= 2) {
         //$('#comparisonForm').submit();
         console.log("passed");
        console.log(data);
-    } else {
-        alert("Please enter at least 2 vehicles.");
-    }
-}
+       result=[];
+       var promises = data.map(element => {
+     return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: "./model/vehiculeCaracteristique.php",
+            data: {
+                idMarque: element.marque,
+                idModele: element.modele,
+                idVersion: element.version,
+                idVehicule: element.id
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                result.push(response);
+                resolve(); 
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+                reject(); 
+            }
+        });
+     });
+     });
 
-        
+      Promise.all(promises)
+        .then(() => {
+        console.log("result", result);
+        if (result.length > 1) {
+            $('#cardContainer').empty();
+            console.log(result);
+            result.forEach(element => {
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
+            });
+            displayTable(result);
+        }
+     })
+     .catch(() => {
+        console.log("One or more AJAX requests failed");
+     });
+     } else {
+        alert("Please enter at least 2 vehicles.");
+     }
+        }     
     </script>
-<?php
-}
+ <?php
+             }
 
 }
 ?>

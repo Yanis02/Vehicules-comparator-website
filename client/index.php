@@ -1,12 +1,26 @@
 <?php
 require_once("./controller/accueilController.php");
-$controllerModel=new accueilController();
+
+// Set default action to "home" if no action is provided
+$action = isset($_GET['action']) ? $_GET['action'] : 'home';
+
+$controllerModel = new accueilController();
 $controllerModel->showHead();
 $controllerModel->showHeader();
 $controllerModel->displayNewsSection();
 $controllerModel->showNavbar();
-$controllerModel->showMarquesSection();
-$controllerModel->showSeparator();
-$controllerModel->showComp();
 
+switch ($action) {
+    case "comparateur": 
+        $controllerModel->showComp();
+        break;
+    case "detailVehicule" :
+        $controllerModel->showMarquesSection();
+         break;
+   
+    default:
+        $controllerModel->showMarquesSection();
+        $controllerModel->showSeparator();
+        $controllerModel->showCompPage(); 
+}
 ?>

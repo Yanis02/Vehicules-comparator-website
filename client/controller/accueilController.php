@@ -2,6 +2,8 @@
 require_once("./model/news.php");
 require_once("./model/marque.php");
 require_once("./view/accueil.php");
+require_once("./model/caracteristique.php");
+
 
 class accueilController{
    public function showHead(){
@@ -34,11 +36,21 @@ class accueilController{
         $accuilModel=new accueil();
         $accuilModel->separator();
     }
+    public function showCompPage(){
+        $accuilModel=new accueil();
+        $marquesModel=new marqueModel();
+        $caracModel=new CaracModel();
+        $marques=$marquesModel->getAllMarques();
+        $carac=$caracModel->getCarac();
+         $accuilModel->comparaisonPage($marques,$carac);
+    }
     public function showComp(){
         $accuilModel=new accueil();
         $marquesModel=new marqueModel();
+        $caracModel=new CaracModel();
         $marques=$marquesModel->getAllMarques();
-         $accuilModel->comparaison($marques);
+        $carac=$caracModel->getCarac();
+         $accuilModel->comparaison($marques,$carac);
     }
 
 }
