@@ -15,7 +15,7 @@ switch ($action) {
         $controllerModel->showComp();
         break;
     case "detailVehicule" :
-        $controllerModel->showMarquesSection();
+        $controllerModel->showVehiculeDetails();
          break;
    case  "marques" :
     $controllerModel->showMarquesSectionPage();

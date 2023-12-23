@@ -3,6 +3,7 @@ require_once("./model/news.php");
 require_once("./model/marque.php");
 require_once("./view/accueil.php");
 require_once("./model/caracteristique.php");
+require_once("./model/vehicule.php");
 
 
 class accueilController{
@@ -68,6 +69,16 @@ class accueilController{
         $accuilModel->marqueDetails($marque);
         }
         
+    }
+
+    public function showVehiculeDetails(){
+        if(isset($_GET['idVehicule'])){
+            $id = $_GET['idVehicule'];
+        $vehiculeModel=new VehiculeModel();
+        $vehicule=$vehiculeModel->getVehiculeById($id);
+        $accuilModel=new accueil();
+        $accuilModel->vehiculeDetails($vehicule);
+        }
     }
 
 }
