@@ -24,6 +24,12 @@ class accueilController{
     $marques=$marquesModel->getAllMarques();
     $accuilModel->marquesSection($marques);
    }
+   public function showMarquesSectionPage(){
+    $accuilModel=new accueil();
+    $marquesModel=new marqueModel();
+    $marques=$marquesModel->getAllMarques();
+    $accuilModel->marquesSectionPage($marques);
+   }
 
     public function displayNewsSection(){
 
@@ -51,6 +57,17 @@ class accueilController{
         $marques=$marquesModel->getAllMarques();
         $carac=$caracModel->getCarac();
          $accuilModel->comparaison($marques,$carac);
+    }
+
+    public function showMarque(){
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+            $marquesModel=new marqueModel();
+        $marque=$marquesModel->getMarqueById($id);
+        $accuilModel=new accueil();
+        $accuilModel->marqueDetails($marque);
+        }
+        
     }
 
 }

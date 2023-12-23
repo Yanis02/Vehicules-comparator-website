@@ -17,7 +17,10 @@ switch ($action) {
     case "detailVehicule" :
         $controllerModel->showMarquesSection();
          break;
-   
+   case  "marques" :
+    $controllerModel->showMarquesSectionPage();
+    $controllerModel->showMarque();
+    break; 
     default:
         $controllerModel->showMarquesSection();
         $controllerModel->showSeparator();
