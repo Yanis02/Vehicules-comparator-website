@@ -99,10 +99,8 @@ img {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 150px;
     align-items: center;
-   
-    margin-top: 420px;
+    background-color: #F41F11;
     list-style: none;
     font-size: 20px;
 }

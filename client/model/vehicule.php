@@ -86,7 +86,10 @@ class VehiculeModel
                 'vehicule_name' => $vehiculeName,
                 'characteristics' => $characteristicsData,
                 'characteristics_values' => $characteristicsValues,
-                'image_paths' => $imagePathsData
+                'image_paths' => $imagePathsData,
+                'marque_id' => $idMarque,
+                'version_id' => $idVersion,
+                'modele_id' => $idModele
             ];
 
             $result[] = $data;
