@@ -638,7 +638,7 @@ public function marquesSectionPage($marques)
         if (result.length > 1) {
             $('#cardContainer').empty();
             console.log(result);
-            sessionStorage.setItem('data', JSON.stringify(result));
+            sessionStorage.setItem('compResults', JSON.stringify(result));
             $('#comparisonForm').submit();
         }
      })
@@ -652,10 +652,10 @@ public function marquesSectionPage($marques)
      </script> 
      <?php
     }
-    public function comparaison($marques)
+  public function comparaison($marques)
   {
     ?>
-    <div style="display:flex;flex-direction:column;align-items-center;width:100%;">
+    <div id="container" style="display:flex;flex-direction:column;align-items-center;width:100%;">
     <h1 style="margin-top:50px;text-align:center">Comparez vos vehicules</h1>
     <form id="comparisonForm" style="margin-top:50px;margin-left:5%;width: 90%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px;">
         <div style="width:100%; display: flex; flex-direction: row; height:fit-content; justify-content: space-around; align-items: center;" class="comparaison_container">
@@ -687,6 +687,7 @@ public function marquesSectionPage($marques)
         </div>
         <button type="button" onclick="submitForm()" style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
        </form>
+       <div class="d-flex justify-content-around mt-5 " id="textContainer"></div>
       <div class="d-flex justify-content-around mt-5 " id="cardContainer"></div>
      <div class="d-flex justify-content-center mt-5" id="table_container" >
      <table class="table table-bordered table-sm w-50">
@@ -701,16 +702,20 @@ public function marquesSectionPage($marques)
     </div>
     <script>
     $(document).ready(function () {
+        
+     var compData=sessionStorage.getItem('compResults');
+     var compResults=JSON.parse(compData);
+     if(compResults!=null){
+      var text=$("<h1>").text("Votre derniere comparaison :");  
+     $('#textContainer').append(text); 
+    displayTable(compResults);
+    compResults.forEach(element => {
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+            });}
+            
     var storedData = sessionStorage.getItem('data');
-
     var result = JSON.parse(storedData);
-     if(result!=null){
-    displayTable(result);
-    result.forEach(element => {
-                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
-            });
-    sessionStorage.removeItem('data');
-   }
+    
     })
 
      function displayCard(imageSrc, cardTitle, buttonText,id) {
@@ -855,7 +860,7 @@ public function marquesSectionPage($marques)
          });
         
         }
-     function submitForm() {
+    function submitForm() {
          let cpt = 0;
     
      let data=[];
@@ -912,6 +917,7 @@ public function marquesSectionPage($marques)
         if (result.length > 1) {
             $('#cardContainer').empty();
             console.log(result);
+            sessionStorage.setItem("compResults",JSON.stringify(result));
             result.forEach(element => {
                 displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
             });
@@ -984,6 +990,8 @@ public function marquesSectionPage($marques)
        </div>
        <button type="button" onclick="submitForm()" style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
       </form>
+      <div class="d-flex justify-content-around mt-5 " id="textContainer"></div>
+
      <div class="d-flex justify-content-around mt-5 " id="cardContainer"></div>
     <div class="d-flex justify-content-center mt-5" id="table_container" >
     <table class="table table-bordered table-sm w-50">
@@ -998,16 +1006,15 @@ public function marquesSectionPage($marques)
    </div>
    <script>
    $(document).ready(function () {
-   var storedData = sessionStorage.getItem('data');
-
-   var result = JSON.parse(storedData);
-    if(result!=null){
-   displayTable(result);
-   result.forEach(element => {
-               displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
-           });
-   sessionStorage.removeItem('data');
-  }
+    var compData=sessionStorage.getItem('compResults');
+     var compResults=JSON.parse(compData);
+     if(compResults!=null){
+      var text=$("<h1>").text("Votre derniere comparaison :");  
+     $('#textContainer').append(text); 
+    displayTable(compResults);
+    compResults.forEach(element => {
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+            });}
    })
 
    function displayCard(imageSrc, cardTitle, buttonText,id) {
@@ -1209,8 +1216,10 @@ public function marquesSectionPage($marques)
        if (result.length > 1) {
            $('#cardContainer').empty();
            console.log(result);
+           sessionStorage.setItem("compResults",JSON.stringify(result));
+
            result.forEach(element => {
-               displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
+               displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
            });
            displayTable(result);
        }
