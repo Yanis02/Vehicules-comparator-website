@@ -52,6 +52,7 @@ class VehiCarModel
             $imagePathsData = $db->request($conn, $queryImagePaths);
             // Return the data
             $data = [
+                'vehicule_id' => $idVehicule,
                 'vehicule_name' => $vehiculeName,
                 'characteristics' => $characteristicsData,
                 'characteristics_values' => $characteristicsValues,

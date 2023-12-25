@@ -724,7 +724,7 @@ public function marquesSectionPage($marques)
 
     var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
 
-    var button = $('<a>').addClass('btn btn-primary').attr('href', "./index.php?action=detailVehicule").text(buttonText).css('background-color', '#F41F11');
+    var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=detailVehicule&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
 
     cardBody.append(cardTitleElement, button);
 
@@ -855,7 +855,7 @@ public function marquesSectionPage($marques)
          });
         
         }
-    function submitForm() {
+     function submitForm() {
          let cpt = 0;
     
      let data=[];
@@ -913,7 +913,7 @@ public function marquesSectionPage($marques)
             $('#cardContainer').empty();
             console.log(result);
             result.forEach(element => {
-                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",1);
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
             });
             displayTable(result);
         }
