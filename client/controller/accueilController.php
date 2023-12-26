@@ -5,6 +5,10 @@ require_once("./view/accueil.php");
 require_once("./model/caracteristique.php");
 require_once("./model/vehicule.php");
 require_once("./model/utilisateur.php");
+require_once("./model/avisVehicule.php");
+require_once("./model/noteVehicule.php");
+require_once("./model/favoris.php");
+
 
 
 
@@ -75,19 +79,110 @@ class accueilController{
     }
 
     public function showVehiculeDetails(){
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         if(isset($_GET['idVehicule'])){
             $id = $_GET['idVehicule'];
         $vehiculeModel=new VehiculeModel();
         $vehicule=$vehiculeModel->getVehiculeById($id);
         $accuilModel=new accueil();
         $accuilModel->vehiculeDetails($vehicule);
+        $noteModel=new NoteVehiculeModel();
+        $avg=$noteModel->getAverageNoteForVehicule($id);
+        $accuilModel->avgNote($avg);
+        $this->showSeparator();
         $marquesModel=new marqueModel();
         $marques=$marquesModel->getAllMarques();
         $accuilModel->comparaisonV($marques,$vehicule[0]["vehicule_id"],$vehicule[0]["marque_id"],$vehicule[0]["modele_id"],$vehicule[0]["version_id"]);
-
+        $this->showSeparator();
+        if(isset($_SESSION['user'])){
+            $idUser=$_SESSION['user']["id"];
+        }else echo "user not found";
+        $favorisModel=new FavorisModel();
+        $result=$favorisModel->checkFavoris($idUser,$id);
+        if($result===false) $accuilModel->personalSection($id,false); else $accuilModel->personalSection($id,true);
+        
         }
        
     }
+     public function deleteFavoris(){
+        if(isset($_SESSION['user'])){
+            $id=$_SESSION['user']["id"];
+                if(isset($_GET["idVehicule"])){
+                    $idVehicule=$_GET["idVehicule"];
+                    $favorisModel=new FavorisModel();
+                    $favorisModel->deleteFavoris($id,$idVehicule);
+                    
+                        header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                    
+                        
+                    
+                }
+                
+                
+             
+            
+        } else echo "user not found";
+     }
+     public function handleAvis(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(isset($_SESSION['user'])){
+                $id=$_SESSION['user']["id"];
+                    $valeur=filter_input(INPUT_POST, 'avis', FILTER_SANITIZE_STRING);;
+                    $idVehicule=filter_input(INPUT_POST, 'idVehicule', FILTER_SANITIZE_STRING);
+                 $avisModel=new AvisVehiculeModel();
+                 $result=$avisModel->addAvis($id,$idVehicule,$valeur);
+                 if ($result) {
+                    echo "Avis is waiting to be approuved!";
+                    header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                } else {
+                    echo "Add Avis failed failed. Please try again.";
+                    
+                }
+            } else echo "user not found";
+        }
+        
+     }
+     public function handleNote(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if(isset($_SESSION['user'])){
+                $id=$_SESSION['user']["id"];
+                    $valeur=filter_input(INPUT_POST, 'note', FILTER_SANITIZE_STRING);;
+                    $idVehicule=filter_input(INPUT_POST, 'idVehicule', FILTER_SANITIZE_STRING);
+                 $noteModel=new NoteVehiculeModel();
+                 $result=$noteModel->addNote($id,$idVehicule,$valeur);
+                 if ($result) {
+                    header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                } else {
+                    echo "Add Note failed failed. Please try again.";
+                    
+                }
+            } else echo "user not found";
+        }
+        
+     }
+
+     public function handleFavoris(){
+        if(isset($_SESSION['user'])){
+            $id=$_SESSION['user']["id"];
+                if(isset($_GET["idVehicule"])){
+                    $idVehicule=$_GET["idVehicule"];
+                    $favorisModel=new FavorisModel();
+                    $result=$favorisModel->addFavoris($id,$idVehicule);
+                    if ($result) {
+                        header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                    } else {
+                        echo "Add Favoris failed failed. Please try again.";
+                        
+                    }
+                }
+                
+                
+             
+            
+        } else echo "user not found";
+     }
     public function showLoginPage(){
         $accuilModel=new accueil();
         $accuilModel->login();  

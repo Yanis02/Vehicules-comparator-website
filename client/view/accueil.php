@@ -1028,7 +1028,7 @@ public function marquesSectionPage($marques)
 
    var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
 
-   var button = $('<a>').addClass('btn btn-primary').attr('href', "./index.php?action=detailVehicule").text(buttonText).css('background-color', '#F41F11');
+   var button = $('<a>',{style:"border:none"}).addClass('btn btn-primary').attr('href', `./index.php?action=detailVehicule&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
 
    cardBody.append(cardTitleElement, button);
 
@@ -1233,6 +1233,45 @@ public function marquesSectionPage($marques)
        }     
    </script>
    <?php
+}
+public function avgNote($value){
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;" >
+        <div>Note moyenne des utilisateurs :</div>
+        <div style="color:#F41F11;"><?php echo $value ?></div>
+    </div>
+    <?php
+}
+public function personalSection($idVehicule,$notAdded){
+    if(isset($_SESSION['user'])){
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;">
+    <form method="post" action="./index.php?action=handleAvis" style="width:700px;padding-left:50px;margin:20px;">
+    <input name="idVehicule" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $idVehicule?>>
+    <label for="avis" style="margin-right:50%;">Ajouter un avis :</label>
+    <input name="avis" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required >
+    <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
+    </form>
+    <form method="post" action="./index.php?action=handleNote" style="width:700px;padding-left:50px;margin:20px;">
+    <input name="idVehicule" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $idVehicule?>>
+    <label for="note" style="margin-right:50%;">Ajouter une note :</label>
+    <input name="note" type="number" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"min="0" step="0.01" max="10" required >
+    <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
+    </form>
+    <?php
+      if(!($notAdded)){
+        ?>
+            <a class="btn btn-primary" href="./index.php?action=deleteFavoris&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Retirer des favoris</a>
+
+        <?php
+      }else { ?> 
+    <a class="btn btn-primary" href="./index.php?action=addFavoris&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Ajouter au favoris</a>
+
+      <?php }
+    ?>
+    </div>
+    <?php
+    }
 }
 
 }

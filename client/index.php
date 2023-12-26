@@ -37,8 +37,20 @@ switch ($action) {
         break;
         case "logoutHandler" :
             $controllerModel->handleLogout();
-            break;           
-     
+            break;
+        case "handleAvis" :
+            $controllerModel->handleAvis();           
+            break;
+            case "handleNote" :
+                $controllerModel->handleNote();           
+                break;
+                case "addFavoris" :
+                    $controllerModel->handleFavoris();           
+                    break;
+            case "deleteFavoris" :
+                $controllerModel->deleteFavoris();
+                break;            
+
     default:
         $controllerModel->displayNewsSection();
         $controllerModel->showNavbar();
