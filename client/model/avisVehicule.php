@@ -60,6 +60,62 @@ class AvisVehiculeModel
 
     return $result;
 }
+public function getAllAvisVehicules($idVehicule, $currentPage = 1, $avisPerPage = 5)
+{
+    $db = new Database();
+    $conn = $db->connectDb();
+
+    $startIndex = ($currentPage - 1) * $avisPerPage;
+
+    $query = "
+        SELECT avisvehicule.idVehicule as vehicule_id, avisvehicule.id as avis_id, avisvehicule.valeur, COUNT(appreciation.id) as appreciation_count,
+               utilisateur.id as utilisateur_id, utilisateur.nom as utilisateur_nom, utilisateur.prenom as utilisateur_prenom
+        FROM avisvehicule
+        LEFT JOIN utilisateur ON avisvehicule.idUser = utilisateur.id
+        LEFT JOIN appreciation ON avisvehicule.id = appreciation.IdAvis
+        WHERE avisvehicule.idVehicule = $idVehicule AND avisvehicule.approuve = 1
+        GROUP BY avisvehicule.id
+        ORDER BY appreciation_count DESC
+        LIMIT $startIndex, $avisPerPage;
+    ";
+
+    $avisData = $db->request($conn, $query);
+
+    $result = array();
+    foreach ($avisData as $item) {
+        $data = [
+            "vehicule_id" => $item['vehicule_id'],
+            'avis_id' => $item['avis_id'],
+            'valeur' => $item['valeur'],
+            'nbAppreciations' => $item['appreciation_count'],
+            'utilisateur' => [
+                'id' => $item['utilisateur_id'],
+                'nom' => $item['utilisateur_nom'],
+                'prenom' => $item['utilisateur_prenom'],
+            ],
+        ];
+
+        $result[] = $data;
+    }
+
+    $db->disconnectDb($conn);
+
+    return $result;
+}
+public function getTotalAvisCount($idVehicule)
+    {
+        $db = new Database();
+        $conn = $db->connectDb();
+
+        $query = "SELECT COUNT(*) AS totalAvis FROM avisvehicule WHERE idVehicule = '$idVehicule' AND approuve = 1";
+        $result = $db->request($conn, $query);
+
+        $totalAvis = ($result && !empty($result[0]['totalAvis'])) ? $result[0]['totalAvis'] : 0;
+
+        $db->disconnectDb($conn);
+
+        return $totalAvis;
+    }
 public function addAppreciation($idUser, $avisId)
 {
     $db = new Database();

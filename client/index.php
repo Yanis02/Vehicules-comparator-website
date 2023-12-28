@@ -18,6 +18,10 @@ switch ($action) {
         $controllerModel->showNavbar();
         $controllerModel->showVehiculeDetails();
          break;
+         case "avisVehicule" :
+            $controllerModel->showNavbar();
+            $controllerModel->showVehiculeAvis();
+             break;
    case  "marques" :
     $controllerModel->showNavbar();
     $controllerModel->showMarquesSectionPage();

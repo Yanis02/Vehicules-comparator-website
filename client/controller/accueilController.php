@@ -121,7 +121,49 @@ class accueilController{
         }
         
     }
-
+    public function showVehiculeAvis()
+    {
+        if (isset($_GET['idVehicule'])) {
+            $id = $_GET['idVehicule'];
+            $vehiculeModel = new VehiculeModel();
+            $vehicule = $vehiculeModel->getVehiculeById($id);
+            $accuilModel = new accueil();
+            $accuilModel->vehiculeAvis($vehicule);
+            $noteModel = new NoteVehiculeModel();
+            $avg = $noteModel->getAverageNoteForVehicule($id);
+            $accuilModel->avgNote($avg);
+            $this->showSeparator();
+            $avisModele = new AvisVehiculeModel();
+    
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+            $avisPerPage = 5;
+    
+            $topAvis = $avisModele->getAllAvisVehicules($id, $currentPage, $avisPerPage);
+    
+            if ($topAvis) {
+                $accuilModel->AvisText();
+                foreach ($topAvis as $avis) {
+                    if (isset($_SESSION['user'])) {
+                        $idUser = $_SESSION['user']["id"];
+                        $isAppreciated = $avisModele->checkAppreciation($idUser, $avis["avis_id"]);
+    
+                        $accuilModel->avisVehicule($avis, $isAppreciated);
+                    } else {
+                        $accuilModel->avisVehicule($avis, false);
+                    }
+                }
+            } else {
+                $accuilModel->AvisNotFound();
+            }
+    
+            $totalAvis = $avisModele->getTotalAvisCount($id);
+            $totalPages = ceil($totalAvis / $avisPerPage);
+    
+            $accuilModel->pagination($currentPage, $totalPages);
+            $accuilModel->vehiculeDetailsBtn($id);
+        }
+    }
+    
     public function showVehiculeDetails(){
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
@@ -189,7 +231,7 @@ class accueilController{
                     $idVehicule=$_GET["idVehicule"];
                     $avisModel=new AvisVehiculeModel();
                     $result=$avisModel->deleteAppreciation($idUser,$idAvis);
-                        header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                        header("Location: ./index.php?action=avisVehicule&idVehicule=" . $idVehicule);
                         
                     }
                 } else echo "user not found";
@@ -386,7 +428,7 @@ public function handleLogout(){
                 $avisModel=new AvisVehiculeModel();
                 $result=$avisModel->addAppreciation($idUser,$idAvis);
                 if ($result) {
-                    header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                    header("Location: ./index.php?action=avisVehicule&idVehicule=" . $idVehicule);
                 } else {
                     echo "Add appreciation failed failed. Please try again.";
                     

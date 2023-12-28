@@ -476,7 +476,7 @@ public function AvisPage($marque)
 
         if (selectedVehicule) {
        
-        var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avis&idVehicule=${selectedVehicule.vehicule_id}`).text("Voir avis").css('background-color', '#F41F11');
+        var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avisVehicule&idVehicule=${selectedVehicule.vehicule_id}`).text("Voir avis").css('background-color', '#F41F11');
         $('#characteristicsContainer').append(button); }
     });
  }
@@ -496,7 +496,7 @@ public function AvisPage($marque)
 
    var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
 
-   var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avis&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
+   var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avisVehicule&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
 
    cardBody.append(cardTitleElement, button);
 
@@ -507,6 +507,14 @@ public function AvisPage($marque)
   </script>
         <?php
 } 
+public function vehiculeAvis($vehicule){
+    echo '<div style="width: 80%; margin: 10px auto; display: flex; justify-content: space-evenly; align-items: center;">';
+    echo '<h2>' . $vehicule[0]['vehicule_name'] . '</h2>';
+    echo '<img class="card-img-top w-25" src="./img/vehicules/' . $vehicule[0]['image_paths'][0]['chemin'] . '" alt="' . $vehicule[0]['vehicule_name'] . '">';
+    echo '</div>';
+
+   
+}
 public function vehiculeDetails($vehicule){
     echo '<div style="width: 80%; margin: 10px auto; display: flex; justify-content: space-evenly; align-items: center;">';
     echo '<h2>' . $vehicule[0]['vehicule_name'] . '</h2>';
@@ -601,7 +609,13 @@ public function marquesSectionPage($marques,$type)
                </div>
           <?php
 }
-
+   public function AvisNotFound(){
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
+    Pas d avis pour le moment :( 
+</div>
+<?php
+   }
     public function footer (){
         ?>
         </html>
@@ -1423,7 +1437,36 @@ public function avgNote($value){
 public function allAvisBtn($idVehicule){
     ?>
      <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
-     <a class="btn btn-primary" href="./index.php?action=avis&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Voir tous</a>
+     <a class="btn btn-primary" href="./index.php?action=avisVehicule&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Voir tous</a>
+  </div>
+    <?php
+}
+public function pagination($currentPage, $totalPages)
+{
+    ?>
+    <nav aria-label="...">
+        <ul class="pagination d-flex justify-content-center mt-5">
+            <li class="page-item <?php echo $currentPage <= 1 ? 'disabled' : ''; ?> ">
+                <a class="page-link " href="./index.php?action=avisVehicule&idVehicule=<?php echo $_GET['idVehicule']; ?>&page=<?php echo $currentPage - 1; ?>">Previous</a>
+            </li>
+
+            <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                    <a class="page-link " href="./index.php?action=avisVehicule&idVehicule=<?php echo $_GET['idVehicule']; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <li class="page-item <?php echo $currentPage >= $totalPages ? 'disabled' : ''; ?>">
+                <a class="page-link" href="./index.php?action=avisVehicule&idVehicule=<?php echo $_GET['idVehicule']; ?>&page=<?php echo $currentPage + 1; ?>">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <?php
+}
+public function vehiculeDetailsBtn($idVehicule){
+    ?>
+     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
+     <a class="btn btn-primary" href="./index.php?action=detailVehicule&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Voir Details</a>
   </div>
     <?php
 }
