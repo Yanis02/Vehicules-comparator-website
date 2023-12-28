@@ -12,6 +12,10 @@
     align-items: center;
     
   }
+  .nav ul li a:active,
+.nav ul li a:hover {
+    color: #F41F11 /* Set the color for active or hovered links */
+}
 .header {
     padding: 40px;
     display: flex;

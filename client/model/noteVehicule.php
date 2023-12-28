@@ -4,20 +4,29 @@ require_once("database.php");
 class NoteVehiculeModel
 {
     public function addNote($idUtilisateur, $idVehicule, $valeur)
-    {
-        $db = new Database();
-        $conn = $db->connectDb();
+{
+    $db = new Database();
+    $conn = $db->connectDb();
 
-        
-        $query = "INSERT INTO notevehicule (idUser, idVehicule, valeur) 
-                  VALUES ('$idUtilisateur', '$idVehicule', '$valeur')";
+    $existingNoteQuery = "SELECT id FROM notevehicule WHERE idUser = '$idUtilisateur' AND idVehicule = '$idVehicule'";
+    $existingNoteResult = $db->request($conn, $existingNoteQuery);
 
-        $db->request($conn, $query);
+    if ($existingNoteResult) {
+        $noteId = $existingNoteResult[0]['id'];
+        $updateQuery = "UPDATE notevehicule SET valeur = '$valeur' WHERE id = '$noteId'";
+        $db->request($conn, $updateQuery);
+        $db->disconnectDb($conn);
+        return false;
+    } else {
+        $insertQuery = "INSERT INTO notevehicule (idUser, idVehicule, valeur) 
+                        VALUES ('$idUtilisateur', '$idVehicule', '$valeur')";
+        $db->request($conn, $insertQuery);
         $noteVehiculeId = $conn->lastInsertId();
         $db->disconnectDb($conn);
-
-        return $noteVehiculeId;
+        return true;
     }
+}
+
     public function getAverageNoteForVehicule($idVehicule)
     {
         $db = new Database();

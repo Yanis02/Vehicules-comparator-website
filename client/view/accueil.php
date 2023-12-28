@@ -7,35 +7,35 @@ $modeleModel = new ModeleModel();
 $versionModel = new VersionModel();
 class accueil {
 
-public function navBar(){
- ?><div style=" display:flex; justify-content:center;align-items-center;">
+    public function navBar()
+    {
+        // Get the current action from the URL
+        $currentAction = isset($_GET['action']) ? $_GET['action'] : '';
+    
+        ?>
+        <div style="display: flex; justify-content: center; align-items: center;">
+    
+            <div>
+                <ul style="display: flex; flex-direction: row; justify-content: center; align-items: center; list-style: none; gap: 150px; font-size: 20px;">
+                    <li><a href="./index.php?action=home" style="text-decoration: none; color: <?= $currentAction === 'home' ? 'red' : '#000'; ?>">Accueil</a></li>
+                    <li><a href="./index.php?action=marques" style="text-decoration: none; color: <?= $currentAction === 'marques' ? 'red' : '#000'; ?>">Marques</a></li>
+                    <li><a href="./index.php?action=avis" style="text-decoration: none; color: <?= $currentAction === 'avis' ? 'red' : '#000'; ?>">Avis</a></li>
 
- 
- <div >
-    <ul style=" display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
-    gap:150px;
-    font-size: 20px;">
-        <li><a href="./index.php?action=home">Accueil</a></li>
-        <li><a href="./index.php?action=marques">Marques</a></li>
-        <li><a href="./index.php?action=comparateur">Comparateur</a></li>
-        <li><a href="./index.php?action=news">News</a></li>
-        <li><a href="./index.php?action=guide">Guides d'achats</a></li>
-        <li><a href="./index.php?action=contact">Contact</a></li>
-
-
-    </ul>
- </div></div>
- <?php
-}    
+                    <li><a href="./index.php?action=comparateur" style="text-decoration: none; color: <?= $currentAction === 'comparateur' ? 'red' : '#000'; ?>">Comparateur</a></li>
+                    <li><a href="./index.php?action=news" style="text-decoration: none; color: <?= $currentAction === 'news' ? 'red' : '#000'; ?>">News</a></li>
+                    <li><a href="./index.php?action=guide" style="text-decoration: none; color: <?= $currentAction === 'guide' ? 'red' : '#000'; ?>">Guides d'achats</a></li>
+                    <li><a href="./index.php?action=contact" style="text-decoration: none; color: <?= $currentAction === 'contact' ? 'red' : '#000'; ?>">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <?php
+    }
+    
 public function header(){
     ?>
     <header>
         <div class="header">
-        <h1>Logo</h1>
+        <a href="./index.php?action=home"> <h1>Logo</h1></a>
         <div class="socialContainer">
            <a href="https://www.google.com/"> <img src="./img/assets/google.png"></img></a>
            <a href="https://www.facebook.com"><img src="./img/assets/facebook.png"></img></a>
@@ -214,11 +214,28 @@ public function marqueDetails($marque)
             success: function (response) {
                 console.log(response);
                 response.forEach((element,index) => {
-                    if(index<3){
+                    
                         displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
-                    }
+                    
 
             });
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "./model/marque.php",
+            data: {
+                id: <?php echo $marque[0]["id"] ?>,
+                
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+               
             createSelect(response);
             },
             error: function (xhr, status, error) {
@@ -226,6 +243,7 @@ public function marqueDetails($marque)
                 console.error("AJAX Error:", status, error);
             }
         });
+
             })
   function createSelect(vehicules) {
     var formElement = $('<form>', {
@@ -305,6 +323,10 @@ public function marqueDetails($marque)
     });
 
     $('#characteristicsContainer').append(tableElement);
+    var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=detailVehicule&idVehicule=${vehicule.vehicule_id}`).text("Voir details").css('background-color', '#F41F11');
+    $('#characteristicsContainer').append(button);
+
+
  }
 
 
@@ -321,6 +343,160 @@ public function marqueDetails($marque)
    var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
 
    var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=detailVehicule&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
+
+   cardBody.append(cardTitleElement, button);
+
+   card.append(cardImage, cardBody);
+
+   $('#cardContainer').append(card);
+ } 
+  </script>
+        <?php
+} 
+public function AvisPage($marque)
+{
+        ?>
+       <div style="padding:20px;width:80%;display:flex;flex-direction:column;justify-content:space-around;align-items:center;margin-left:10%;border:solid 2px #F41F11;border-radius:10px;margin-top:50px;">
+        <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
+        <div style="display:flex;flex-direction:column;justify-content:space-around;align-items:center;">
+        <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:27px;font-weight:200;">Nom:<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $marque[0]["nom"] ?></p>
+         </div>
+         <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:27px;font-weight:200;">Payes:<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $marque[0]["pays"] ?></p>
+         </div>
+         <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:27px;font-weight:200;">Siege:<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $marque[0]["siege"] ?></p>
+         </div>
+         <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:27px;font-weight:200;">Annee de creation:<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $marque[0]["anne_creation"] ?></p>
+         </div>
+         
+     </div>
+        
+        <img src="./img/marques/<?php echo $marque[0]['images'][0]?>" style="width:300px;height:auto;"></img>
+        </div>
+        <div style="margin-right:50%;display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:30px;font-weight:400;margin-top:20px;">Principales voitures:<h1>   
+       </div>
+        <div class="d-flex justify-content-around mt-5 mb-5 w-100" id="cardContainer"></div>
+        <div style="margin-right:50%;display:flex;flex-direction:row; width:500px;gap:20px;">
+         <h1 style="font-size:30px;font-weight:400;">Voir toutes les voitures:<h1>   
+       </div>
+       <div class="d-flex justify-content-around mt-5 mb-5 w-100" id="listContainer"></div>
+       <div class="d-flex flex-column justify-content-around align-items-center mt-5 mb-5 w-100" id="characteristicsContainer"></div>
+
+        </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+            type: "POST",
+            url: "./model/marque.php",
+            data: {
+                idMarque: <?php echo $marque[0]["id"] ?>,
+                
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                response.forEach((element,index) => {
+                    
+                        displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir avis",element.vehicule_id);
+                    
+
+            });
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "./model/marque.php",
+            data: {
+                id: <?php echo $marque[0]["id"] ?>,
+                
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+               
+            createSelect(response);
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+            }
+        });
+
+            })
+  function createSelect(vehicules) {
+    var formElement = $('<form>', {
+        id: 'vehiculeForm',
+        style: 'width: 80%; margin: 20px auto; text-align: center;',
+    });
+
+    var selectElement = $('<select>', {
+        name: 'vehicule', 
+        id: 'vehicule',
+        class: 'modeleDropdown',
+        style: 'width: 100%; height: 40px; padding: 5px; color: #F41F11; outline: none; border-radius: 5px;height:50px; border: solid 2px black;',
+    });
+
+    selectElement.append($('<option>', {
+        value: '',
+        text: 'Vehicule'
+    }));
+
+    vehicules.forEach(element => {
+        selectElement.append($('<option>', {
+            value: element.vehicule_name,
+            text: element.vehicule_name,
+        }));
+    });
+
+    formElement.append(selectElement);
+
+    var submitButton = $('<input>', {
+        type: 'submit',
+        value: 'Consulter',
+        style: "margin-top:30px;width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;",
+    });
+
+    formElement.append(submitButton);
+
+    $('#listContainer').append(formElement);
+
+    formElement.submit(function (e) {
+        e.preventDefault(); 
+
+        var selectedName = $('#vehicule').val();
+        var selectedVehicule = vehicules.find(vehicle => vehicle.vehicule_name === selectedName);
+
+        if (selectedVehicule) {
+       
+        var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avis&idVehicule=${selectedVehicule.vehicule_id}`).text("Voir avis").css('background-color', '#F41F11');
+        $('#characteristicsContainer').append(button); }
+    });
+ }
+
+ 
+
+
+           
+ function displayCard(imageSrc, cardTitle, buttonText,id) {
+   
+
+   var card = $('<div>').addClass('card').css('width', '18rem');
+
+   var cardImage = $('<img>').addClass('card-img-top').attr('src', imageSrc).attr('alt', 'Card Image');
+
+   var cardBody = $('<div>').addClass('card-body');
+
+   var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
+
+   var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=avis&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
 
    cardBody.append(cardTitleElement, button);
 
@@ -384,8 +560,9 @@ public function marquesSection($marques)
     </div>
     <?php
 }
-public function marquesSectionPage($marques)
+public function marquesSectionPage($marques,$type)
 {
+    
     $numSlides = ceil(count($marques) / 3);
       ?>
      <div class="marquesContainer">
@@ -399,7 +576,8 @@ public function marquesSectionPage($marques)
                             ?>
                             <div style="height:400px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;">
                             <div style="height:300px;display:flex;justify-content:center;align-items:center;">
-                             <a href="./index.php?action=marques&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>.png" alt="..." style="width:300px; height:auto;"></a>
+                             <a href="<?php if ($type==="avis") echo "./index.php?action=avis";else echo "./index.php?action=marques";?>
+&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>.png" alt="..." style="width:300px; height:auto;"></a>
                              </div>
                              <p style="font-size:40px;"> <?php echo $marques[$j]["nom"] ?></p>
                             </div>
@@ -1242,37 +1420,171 @@ public function avgNote($value){
     </div>
     <?php
 }
-public function personalSection($idVehicule,$notAdded){
+public function allAvisBtn($idVehicule){
+    ?>
+     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
+     <a class="btn btn-primary" href="./index.php?action=avis&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Voir tous</a>
+  </div>
+    <?php
+}
+public function waitingApprouval($text,$type){
+    ?>
+    <!-- Button trigger modal -->
+ <button id="btn" style="display:none" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+ </button>
+
+ <!-- Modal -->
+ <div class="modal fade " id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <?php echo $text ?>      </div>
+      <div class="modal-footer">
+        <button id="close" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background:#F41F11">Fermer</button>
+      </div>
+    </div>
+  </div>
+ </div>
+    <script>
+ $(document).ready(function() {
+        $("#btn").click();
+        $("#close").click(function() {
+            <?php
+            if($type=="vehicule"){
+                ?>
+          window.location.href = `./index.php?action=home`;
+
+                <?php
+            }else if($type=="register"){
+                ?>
+                window.location.href = `./index.php?action=home`;
+      
+                      <?php
+            }else if($type=="login"){
+                ?>
+                window.location.href = `./index.php?action=auth`;
+      
+                      <?php
+            } else   ?>
+            window.location.href = `./index.php?action=home`;
+  
+                  <?php
+                ?>
+    });
+    });
+    </script>
+    <?php
+}
+public function personalSection($id,$notAdded,$type){
     if(isset($_SESSION['user'])){
     ?>
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;">
-    <form method="post" action="./index.php?action=handleAvis" style="width:700px;padding-left:50px;margin:20px;">
-    <input name="idVehicule" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $idVehicule?>>
+    <form method="post" action="    <?php if($type==="vehicule") echo "./index.php?action=handleAvis"; else echo "./index.php?action=handleAvisMarque";  ?>
+" style="width:700px;padding-left:50px;margin:20px;">
+    <input name="        <?php if($type==="vehicule") echo "idVehicule"; else echo "idMarqueAvis";  ?>
+" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $id?>>
     <label for="avis" style="margin-right:50%;">Ajouter un avis :</label>
     <input name="avis" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required >
     <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
     </form>
-    <form method="post" action="./index.php?action=handleNote" style="width:700px;padding-left:50px;margin:20px;">
-    <input name="idVehicule" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $idVehicule?>>
-    <label for="note" style="margin-right:50%;">Ajouter une note :</label>
+    <form method="post" action="    <?php if($type==="vehicule") echo "./index.php?action=handleNote"; else echo "./index.php?action=handleNoteMarque";  ?>
+" style="width:700px;padding-left:50px;margin:20px;">
+    <input name="        <?php if($type==="vehicule") echo "idVehicule"; else echo "idMarqueNote";  ?>
+" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $id?>>    <label for="note" style="margin-right:50%;">Ajouter une note :</label>
     <input name="note" type="number" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"min="0" step="0.01" max="10" required >
     <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
     </form>
     <?php
-      if(!($notAdded)){
-        ?>
-            <a class="btn btn-primary" href="./index.php?action=deleteFavoris&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Retirer des favoris</a>
-
-        <?php
-      }else { ?> 
-    <a class="btn btn-primary" href="./index.php?action=addFavoris&idVehicule=<?php echo $idVehicule?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Ajouter au favoris</a>
-
-      <?php }
+    if($type==="vehicule"){
+        if(!($notAdded)){
+            ?>
+                <a class="btn btn-primary" href="./index.php?action=deleteFavoris&idVehicule=<?php echo $id?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Retirer des favoris</a>
+    
+            <?php
+          }else { ?> 
+        <a class="btn btn-primary" href="./index.php?action=addFavoris&idVehicule=<?php echo $id?>" style="text-align:center;width:150px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Ajouter au favoris</a>
+    
+          <?php }
+    }
+      
     ?>
     </div>
     <?php
     }
 }
+public function avisVehicule($a,$isAppreciated){
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;">
+    
 
+     
+         <div style="width:800px;display:flex;flex-direction:row;align-items:center;justify-content:space-evenly;">
+    <label for="avis" ><?php echo $a["utilisateur"]["nom"];echo " "; echo $a["utilisateur"]["prenom"] ?></label>
+    <input name="avis" type="text" style="width:60%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;border:solid 2px black;" disabled value="<?php echo $a["valeur"] ?>" >
+    <label><?php echo $a["nbAppreciations"]  ?>  appreciations</label>
+    <?php
+    if (isset($_SESSION['user'])) {
+        if($isAppreciated===false){
+        ?>
+        <a class="btn btn-primary" href="./index.php?action=appreciateAvis&idAvis=<?php echo $a["avis_id"]?>&idVehicule=<?php echo $a["vehicule_id"]?>" style="text-align:center;width:100px;height:40px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Apprecier</a>
+
+        <?php
+        }else {
+          ?>
+              <a class="btn btn-primary" href="./index.php?action=deleteAppreciation&idAvis=<?php echo $a["avis_id"]?>&idVehicule=<?php echo $a["vehicule_id"]?>" style="text-align:center;width:120px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Retirer appreciation</a>
+
+          <?php  
+        }
+    }
+    ?>
+
+ </div>
+       
+    </div>
+    <?php
+    
+}
+public function avisMarque($a,$isAppreciated){
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;">
+    
+
+     
+         <div style="width:800px;display:flex;flex-direction:row;align-items:center;justify-content:space-evenly;">
+    <label for="avis" ><?php echo $a["utilisateur"]["nom"];echo " "; echo $a["utilisateur"]["prenom"] ?></label>
+    <input name="avis" type="text" style="width:60%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;border:solid 2px black;" disabled value="<?php echo $a["valeur"] ?>" >
+    <label><?php echo $a["nbAppreciations"]  ?>  appreciations</label>
+    <?php
+    if (isset($_SESSION['user'])) {
+        if($isAppreciated===false){
+        ?>
+        <a class="btn btn-primary" href="./index.php?action=appreciateAvisMarque&idAvis=<?php echo $a["avis_id"]?>&idMarque=<?php echo $a["marque_id"]?>" style="text-align:center;width:100px;height:40px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Apprecier</a>
+
+        <?php
+        }else {
+          ?>
+              <a class="btn btn-primary" href="./index.php?action=deleteAppreciationMarque&idAvis=<?php echo $a["avis_id"]?>&idMarque=<?php echo $a["marque_id"]?>" style="text-align:center;width:120px;height:50px;background-color:#F41F11;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center">Retirer appreciation</a>
+
+          <?php  
+        }
+    }
+    ?>
+
+ </div>
+       
+    </div>
+    <?php
+    
+}
+public function AvisText(){
+    ?>
+ <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;"><h1>Avis</h1></div>
+    <?php
+}
 }
 ?>
