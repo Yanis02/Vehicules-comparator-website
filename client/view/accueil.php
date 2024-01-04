@@ -30,11 +30,11 @@ class accueil {
         </div>
         <?php
     }
-    
+   
 public function header(){
     ?>
     <header>
-        <div class="header">
+        <div class="header" style="overflow:visible">
         <a href="./index.php?action=home"> <h1>Logo</h1></a>
         <div class="socialContainer">
            <a href="https://www.google.com/"> <img src="./img/assets/google.png"></img></a>
@@ -45,9 +45,17 @@ public function header(){
              )){
                 $loggedInUser = $_SESSION['user'];
                 ?>
-              <a href="./index.php?action=logoutHandler"><?php echo $loggedInUser["nom"]?></a>
+                <div class="dropdown">
+           <a class="btn btn-danger dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <?php echo $loggedInUser["nom"];echo " "; echo $loggedInUser["prenom"];  ?>
+             </a>
 
-             <a href="./index.php?action=logoutHandler">Logout</a>
+            <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="./index.php?action=profile" >Votre profile</a></li>  
+            <li><a class="dropdown-item" href="./index.php?action=logoutHandler">Se deconnecter</a></li>
+           </ul>
+            </div>
+              
              <?php
              }else {
                 ?>
@@ -613,7 +621,7 @@ public function marquesSectionPage($marques,$type)
     ?>
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
     Pas d avis pour le moment :( 
-</div>
+ </div>
 <?php
    }
     public function footer (){
@@ -950,7 +958,6 @@ public function marquesSectionPage($marques,$type)
 
     card.append(cardImage, cardBody);
 
-    // Append the new card to #cardContainer
     $('#cardContainer').append(card);
    }
 
@@ -1421,6 +1428,29 @@ public function marquesSectionPage($marques,$type)
        //$('#comparisonForm').submit();
        console.log("passed");
       console.log(data);
+      for (let i = 0; i < data.length; i++) {
+          for (let j = i+1; j < data.length; j++) {
+             if(i!=j){
+                $.ajax({
+                        type: "POST",
+                        url: "./model/comparaison.php", 
+                        data: {
+                            idVehicule1: data[i].id,
+                            idVehicule2: data[j].id
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                           
+                        }
+                    });
+             }
+            
+          }        
+       }
       result=[];
       var promises = data.map(element => {
     return new Promise((resolve, reject) => {
@@ -1676,52 +1706,53 @@ public function AvisText(){
     <?php
 }
  
-public function card($imageSrc, $cardTitle, $buttonText, $id) {
+public function card($imageSrc, $cardTitle) {
     echo '<div class="card" style="width:250px;height:300px">';
     echo '<img src="' . $imageSrc . '" alt="Card Image" class="card-img-top">';
     echo '<div class="card-body">';
     echo '<h5 class="card-title">' . $cardTitle . '</h5>';
-    echo '<a href="./index.php?action=detailVehicule&idVehicule=' . $id . '" class="btn btn-primary" style="border: none; background-color: #F41F11;">' . $buttonText . '</a>';
     echo '</div></div>';
 }
 public function popularComps($comp){
-    $numSlides = ceil(count($comp) / 3);
+    $this->separator();
     ?>
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;">
-    <div id="carouselExample" class="carousel slide">
+    <h1>Les comparaisons les plus populaires</h1>
+    <div id="carouselExample2" class="carousel slide">
             <div class="carousel-inner">
-                <?php for ($i = 0; $i < $numSlides; $i++) : ?>
+                <?php for ($i = 0; $i < count($comp); $i++) :?>
                     <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
                         <div style="display:flex; justify-content:space-around; align-items:center;">
-                            <?php
-                            for ($j = $i * 3; $j < min(($i + 1) * 3, count($comp)); $j++) :
-                            ?>
-                           <?php
-           foreach ($comp as $cmp) {
-            ?>
-            <div style="display:flex;justify-content:space-evenly;align-items:center;border:solid 2px #F41F11;border-radius:10px;width:800px;height:350px;">
+                           
+             <div style="display:flex;justify-content:space-evenly;align-items:center;border:solid 2px #F41F11;border-radius:10px;width:800px;height:350px;">
              <?php
-              $this->card("./img/vehicules/". $cmp[0][0]["image_paths"][0]["chemin"],$cmp[0][0]["vehicule_name"],"Voir details",1);
-            echo "<h3>VS</h3>";
-              $this->card("./img/vehicules/".$cmp[1][0]["image_paths"][0]["chemin"],$cmp[1][0]["vehicule_name"],"Voir details",1);
+                  
+              $this->card("./img/vehicules/". $comp[$i][0][0]["image_paths"][0]["chemin"],$comp[$i][0][0]["vehicule_name"]);
+              ?>
+              <div style="display:flex;flex-direction:column;justify-content:space-between;align-items:center">
+              <h3>VS</h3>
+              <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=popularComp&idVehicule_1=<?php echo $comp[$i][0][0]["vehicule_id"];?>&idVehicule_2=<?php echo $comp[$i][1][0]["vehicule_id"];?>">Voir comparaison</a>
+              </div>
+              <?php
+              
+              
+              $this->card("./img/vehicules/".$comp[$i][1][0]["image_paths"][0]["chemin"],$comp[$i][1][0]["vehicule_name"]);
 
              ?>
             </div>
-            <?php
-           }
-          ?>
+            
                             
-                            <?php endfor; ?>
+                           
                         </div>
                     </div>
                 <?php endfor; ?>
                 </div>
-               <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+               <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample2" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z\'/%3E%3C/svg%3E') !important;"
  >                </span>
                  <span class="visually-hidden">Previous</span>
                   </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample2" data-bs-slide="next">
                  <span class="carousel-control-next-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z\'/%3E%3C/svg%3E') !important;"
 
  >                </span>
@@ -1734,6 +1765,175 @@ public function popularComps($comp){
          
    </div>
     <?php
+}
+private function displayCard($imageSrc, $cardTitle, $buttonText, $id) {
+    $card = '<div class="card" style="width: 18rem;">';
+    
+    $cardImage = '<img class="card-img-top" src="' . $imageSrc . '" alt="Card Image">';
+
+    $cardBody = '<div class="card-body">';
+
+    $cardTitleElement = '<h5 class="card-title">' . $cardTitle . '</h5>';
+
+    $button = '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=detailVehicule&idVehicule=' . $id . '">' . $buttonText . '</a>';
+
+    $cardBody .= $cardTitleElement . $button;
+
+    $card .= $cardImage . $cardBody . '</div></div>';
+
+    // Output the card
+    echo $card;
+}
+private function displayTable($data) {
+    echo '<table class="table">';
+    echo '<thead>';
+    echo '<tr><th scope="col">Features</th>';
+
+    foreach ($data as $element) {
+        echo '<th>' . $element[0]['vehicule_name'] . '</th>';
+    }
+
+    echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
+
+    foreach ($data[0][0]['characteristics'] as $feature) {
+        echo '<tr><th class="firstcol" scope="row">' . $feature['nom'] . '</th>';
+
+        foreach ($data as $element) {
+            $values = [];
+            $values[] = $element[0]['characteristics_values'][$feature['id']];
+
+            foreach ($values as $value) {
+                echo '<td>' . $value . '</td>';
+            }
+        }
+
+        echo '</tr>';
+    }
+
+    echo '</tbody>';
+    echo '</table>';
+}
+public function displayComp($comp){
+     $this->separator();
+ ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;">
+
+     <div class="d-flex justify-content-around mt-5 "><h1>Comparaison</h1></div>
+      <div class="d-flex flex-row justify-content-around w-50 mt-5 ">
+        <?php
+        foreach ($comp as $cmp) {
+            ##print_r($cmp[0]);
+            $this->displayCard("./img/vehicules/". $cmp[0]["image_paths"][0]["chemin"],$cmp[0]["vehicule_name"],"Voir Details",$cmp[0]["vehicule_id"]);
+        }
+        ?>
+      </div>
+     <div class="d-flex justify-content-center mt-5" >
+     <?php
+     
+      $this->displayTable($comp);
+     ?>
+   </div>
+ </div>
+
+
+   
+ 
+ <?php
+}
+public function profile($favoris){
+   
+    if (isset($_SESSION['user'])) {
+        $user=$_SESSION['user'];
+        $numSlides = ceil(count($favoris) / 3);
+
+        ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;gap:50px;margin-top:50px;">
+    <h1>Informations generales :</h1>
+         <div style="display:flex;flex-direction:column;justify-content:space-around;align-items:center; border:solid 2px #F41F11; border-radius:10px;padding:10px;">
+           
+           <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+            <h1 style="font-size:27px;font-weight:200;">Nom :<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $user["nom"] ?></p>
+           </div>
+           <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+            <h1 style="font-size:27px;font-weight:200;">Prénom :<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $user["prenom"] ?></p>
+           </div>
+           <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+            <h1 style="font-size:27px;font-weight:200;">Sexe :<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $user["sexe"] ?></p>
+           </div>
+           <div style="display:flex;flex-direction:row; width:500px;gap:20px;">
+            <h1 style="font-size:27px;font-weight:200;">Date de naissance :<h1><p style="color:#F41F11;font-size:27px;"> <?php echo $user["dateNaissance"] ?></p>
+           </div>
+         </div> 
+         <div style="width:90%;height:5px;background-color:#F41F11;margin-top:50px;"></div>
+        <h1>Vos favoris</h1>
+        <?php
+        if ($favoris) {
+            ?>
+        <div id="carouselExample" class="carousel slide" style="width:100%;height:400px;">
+            <div class="carousel-inner">
+                <?php for ($i = 0; $i < $numSlides; $i++) : ?>
+                    <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
+                        <div style="display:flex; justify-content:space-around; align-items:center;">
+                            <?php
+                            for ($j = $i * 3; $j < min(($i + 1) * 3, count($favoris)); $j++) :
+                                $this->displayCard("./img/vehicules/".$favoris[$j][0]["image_paths"][0]["chemin"],$favoris[$j][0]["vehicule_name"],"Voir Details",$favoris[$j][0]["vehicule_id"]);
+                            ?>
+                            
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                <?php endfor; ?>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z\'/%3E%3C/svg%3E') !important;"
+ >                </span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z\'/%3E%3C/svg%3E') !important;"
+
+ ></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div> 
+        <?php
+        }else {
+            ?>
+            <h1>Vous n'avez pas de favoris</h1>
+            
+            <?php
+        }
+        ?>
+        
+    </div>
+        <?php
+    }
+}
+public function news($news){
+    ?>
+    <div style="width:60%;height:280px;display:flex;flex-direction:column;align-items:center;gap:15px;border:solid 2px #F41F11; border-radius:10px;padding:10px; ">
+       <h3><?php echo $news["title"]?></h3>
+       <div style="width:90%;height:380px;display:flex;flex-direction:row;align-items:center;justify-content:space-between">
+       <h4 style="font-weight:300"><?php echo $news["description"]?></h4>
+       <img src="./img/news/<?php echo $news["images"][0]?>" style="width:200px;height:100px;">
+    </div>
+    <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=detailNews&id=<?php echo $news["id"]?>">Voir plus</a>
+
+    </div>
+    <?php
+}
+public function newsPage($news){
+?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;gap:50px;margin-top:50px;">
+    <?php
+     foreach ($news as $n) {
+      $this->news($n);     
+    }
+    ?> 
+    </div>
+<?php
 }
 }
 ?>

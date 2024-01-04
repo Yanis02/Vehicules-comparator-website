@@ -50,5 +50,16 @@ class FavorisModel
         $db->request($conn, $query);
         $db->disconnectDb($conn);
     }
+
+    public function getAllFavoris($idUser){
+        $db = new Database();
+        $conn = $db->connectDb();
+
+        $query = "SELECT * FROM favoris WHERE idUser = '$idUser' ";
+
+        $result=$db->request($conn, $query);
+        $db->disconnectDb($conn);
+        return $result;
+    }
 }
 ?>

@@ -59,6 +59,18 @@ class ComparaisonModel {
     
         return $result;
     }
+
+    public function getPopCompsVehicle($vehiculeId) {
+        $req = "SELECT * FROM comparaison 
+                WHERE idVehicule_1 = '$vehiculeId' OR idVehicule_2 = '$vehiculeId'
+                ORDER BY popularite DESC LIMIT 3";
+    
+        $conn = $this->db->connectDb();
+        $result = $this->db->request($conn, $req);
+        $this->db->disconnectDb($conn);
+    
+        return $result;
+    }
       
 }
 

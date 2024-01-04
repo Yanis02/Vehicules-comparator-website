@@ -31,6 +31,11 @@ switch ($action) {
         $controllerModel->showMarquesSectionPageForAvis();
         $controllerModel->showAvisPage();
         break; 
+
+    case "news" :
+        $controllerModel->showNavbar();
+        $controllerModel->showNewsPage();
+        break;    
     case "auth" :
         $controllerModel->showLoginPage();
         break;
@@ -75,7 +80,15 @@ switch ($action) {
                                 break; 
                                 case "deleteAppreciationMarque" :
                                     $controllerModel->deleteAppreciationMarque();           
-                                    break;                  
+                                    break;
+                                    case "popularComp" :
+                                        $controllerModel->showNavbar();
+                                        $controllerModel->popCompDetails();
+                                        break; 
+                                    case "profile" :
+                                        $controllerModel->showNavbar();
+                                        $controllerModel->showProfile();
+                                        break;                       
 
     default:
         $controllerModel->displayNewsSection();

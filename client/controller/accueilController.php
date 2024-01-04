@@ -18,63 +18,68 @@ require_once("./model/comparaison.php");
 
 
 class accueilController{
+    private $accuilModel;
+
+    public function __construct() {
+        $this->accuilModel = new accueil();
+    }
    public function showHead(){
-    $accuilModel=new accueil();
-    $accuilModel->head("AUTOCOMP","Comparateur de vehicules");
+    
+    $this->accuilModel->head("AUTOCOMP","Comparateur de vehicules");
    }
    public function showHeader(){
     if (session_status() != PHP_SESSION_ACTIVE) {
         session_start();
     }
-    $accuilModel=new accueil();
-    $accuilModel->header();
+    
+    $this->accuilModel->header();
    }
    public function showNavbar(){
-    $accuilModel=new accueil();
-    $accuilModel->navBar();
+    
+    $this->accuilModel->navBar();
    }
    public function showMarquesSection(){
-    $accuilModel=new accueil();
+    
     $marquesModel=new marqueModel();
     $marques=$marquesModel->getAllMarques();
-    $accuilModel->marquesSection($marques);
+    $this->accuilModel->marquesSection($marques);
    }
    public function showMarquesSectionPage(){
-    $accuilModel=new accueil();
+    
     $marquesModel=new marqueModel();
     $marques=$marquesModel->getAllMarques();
-    $accuilModel->marquesSectionPage($marques,"marques");
+    $this->accuilModel->marquesSectionPage($marques,"marques");
    }
    public function showMarquesSectionPageForAvis(){
-    $accuilModel=new accueil();
+    
     $marquesModel=new marqueModel();
     $marques=$marquesModel->getAllMarques();
-    $accuilModel->marquesSectionPage($marques,"avis");
+    $this->accuilModel->marquesSectionPage($marques,"avis");
    }
     public function displayNewsSection(){
 
         $newsModel=new newsModel();
         $news=$newsModel->getAllNews();
-        $accuilModel=new accueil();
-        $accuilModel->newsSection($news);
+        
+        $this->accuilModel->newsSection($news);
     }
     public function showSeparator(){
-        $accuilModel=new accueil();
-        $accuilModel->separator();
+        
+        $this->accuilModel->separator();
     }
     public function showCompPage(){
-        $accuilModel=new accueil();
+        
         $marquesModel=new marqueModel();
         $caracModel=new CaracModel();
         $marques=$marquesModel->getAllMarques();
         $carac=$caracModel->getCarac();
-         $accuilModel->comparaisonPage($marques,$carac);
+         $this->accuilModel->comparaisonPage($marques,$carac);
     }
     public function showComp(){
-        $accuilModel=new accueil();
+        
         $marquesModel=new marqueModel();
         $marques=$marquesModel->getAllMarques();
-         $accuilModel->comparaison($marques);
+         $this->accuilModel->comparaison($marques);
     }
     public function showAvisPage()
 {
@@ -82,8 +87,8 @@ class accueilController{
         $id = $_GET['id'];
     $marquesModel=new marqueModel();
     $marque=$marquesModel->getMarqueById($id);
-    $accuilModel=new accueil();
-    $accuilModel->avisPage($marque);}
+    
+    $this->accuilModel->avisPage($marque);}
     
 }
     public function showMarque(){
@@ -94,30 +99,30 @@ class accueilController{
             $id = $_GET['id'];
         $marquesModel=new marqueModel();
         $marque=$marquesModel->getMarqueById($id);
-        $accuilModel=new accueil();
-        $accuilModel->marqueDetails($marque);
+        
+        $this->accuilModel->marqueDetails($marque);
         $noteModel=new NoteMarqueModel();
         $avg=$noteModel->getAverageNoteForMarque($id);
-        $accuilModel->avgNote($avg);
+        $this->accuilModel->avgNote($avg);
         $this->showSeparator();
         if(isset($_SESSION['user'])){
             $idUser=$_SESSION['user']["id"];
-         $accuilModel->personalSection($id,"","marque"); 
+         $this->accuilModel->personalSection($id,"","marque"); 
         
         }
         $avisModele=new AvisMarqueModel();
         $topAvis=$avisModele->getTopAvisMarques($id);
         if ($topAvis) {
-            $accuilModel->AvisText();
+            $this->accuilModel->AvisText();
             foreach ($topAvis as $avis) {
                 if(isset($_SESSION['user'])){
                     $idUser=$_SESSION['user']["id"];
                 $isAppreciated=$avisModele->checkAppreciation($idUser,$avis["avis_id"]);
                
-                 $accuilModel->avisMarque($avis,$isAppreciated);
+                 $this->accuilModel->avisMarque($avis,$isAppreciated);
 
             }else {
-                $accuilModel->avisMarque($avis,false);
+                $this->accuilModel->avisMarque($avis,false);
 
             }}
         } 
@@ -130,11 +135,11 @@ class accueilController{
             $id = $_GET['idVehicule'];
             $vehiculeModel = new VehiculeModel();
             $vehicule = $vehiculeModel->getVehiculeById($id);
-            $accuilModel = new accueil();
-            $accuilModel->vehiculeAvis($vehicule);
+            $this->accuilModel = new accueil();
+            $this->accuilModel->vehiculeAvis($vehicule);
             $noteModel = new NoteVehiculeModel();
             $avg = $noteModel->getAverageNoteForVehicule($id);
-            $accuilModel->avgNote($avg);
+            $this->accuilModel->avgNote($avg);
             $this->showSeparator();
             $avisModele = new AvisVehiculeModel();
     
@@ -144,73 +149,87 @@ class accueilController{
             $topAvis = $avisModele->getAllAvisVehicules($id, $currentPage, $avisPerPage);
     
             if ($topAvis) {
-                $accuilModel->AvisText();
+                $this->accuilModel->AvisText();
                 foreach ($topAvis as $avis) {
                     if (isset($_SESSION['user'])) {
                         $idUser = $_SESSION['user']["id"];
                         $isAppreciated = $avisModele->checkAppreciation($idUser, $avis["avis_id"]);
     
-                        $accuilModel->avisVehicule($avis, $isAppreciated);
+                        $this->accuilModel->avisVehicule($avis, $isAppreciated);
                     } else {
-                        $accuilModel->avisVehicule($avis, false);
+                        $this->accuilModel->avisVehicule($avis, false);
                     }
                 }
             } else {
-                $accuilModel->AvisNotFound();
+                $this->accuilModel->AvisNotFound();
             }
     
             $totalAvis = $avisModele->getTotalAvisCount($id);
             $totalPages = ceil($totalAvis / $avisPerPage);
     
-            $accuilModel->pagination($currentPage, $totalPages);
-            $accuilModel->vehiculeDetailsBtn($id);
+            $this->accuilModel->pagination($currentPage, $totalPages);
+            $this->accuilModel->vehiculeDetailsBtn($id);
         }
     }
     
-    public function showVehiculeDetails(){
+public function showVehiculeDetails(){
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
         if(isset($_GET['idVehicule'])){
             $id = $_GET['idVehicule'];
         $vehiculeModel=new VehiculeModel();
-        $vehicule=$vehiculeModel->getVehiculeById($id);
-        $accuilModel=new accueil();
-        $accuilModel->vehiculeDetails($vehicule);
+        $vehicule=$vehiculeModel->getVehiculeById($id); 
+        $this->accuilModel->vehiculeDetails($vehicule);
         $noteModel=new NoteVehiculeModel();
         $avg=$noteModel->getAverageNoteForVehicule($id);
-        $accuilModel->avgNote($avg);
+        $this->accuilModel->avgNote($avg);
         $this->showSeparator();
         $marquesModel=new marqueModel();
         $marques=$marquesModel->getAllMarques();
-        $accuilModel->comparaisonV($marques,$vehicule[0]["vehicule_id"],$vehicule[0]["marque_id"],$vehicule[0]["modele_id"],$vehicule[0]["version_id"]);
+        $this->accuilModel->comparaisonV($marques,$vehicule[0]["vehicule_id"],$vehicule[0]["marque_id"],$vehicule[0]["modele_id"],$vehicule[0]["version_id"]);
         $this->showSeparator();
-        
         $avisModele=new AvisVehiculeModel();
         $topAvis=$avisModele->getTopAvisVehicules($id);
         if ($topAvis) {
-            $accuilModel->AvisText();
+            $this->accuilModel->AvisText();
             foreach ($topAvis as $avis) {
                 if(isset($_SESSION['user'])){
                     $idUser=$_SESSION['user']["id"];
                 $isAppreciated=$avisModele->checkAppreciation($idUser,$avis["avis_id"]);
                
-                 $accuilModel->avisVehicule($avis,$isAppreciated);
+                 $this->accuilModel->avisVehicule($avis,$isAppreciated);
 
             }else {
-                $accuilModel->avisVehicule($avis,false);
+                $this->accuilModel->avisVehicule($avis,false);
 
             }}
-            $accuilModel->allAvisBtn($id);
+            $this->accuilModel->allAvisBtn($id);
         } 
         if(isset($_SESSION['user'])){
             $idUser=$_SESSION['user']["id"];
             $favorisModel=new FavorisModel();
-        $result=$favorisModel->checkFavoris($idUser,$id);
-        $accuilModel->personalSection($id,$result,"vehicule"); 
+         $result=$favorisModel->checkFavoris($idUser,$id);
+         $this->accuilModel->personalSection($id,$result,"vehicule"); 
 
         }
-
+        $compModel=new ComparaisonModel();
+        $popularComps=$compModel->getPopCompsVehicle($id);
+        $comps=array();
+     foreach ($popularComps as $pop) {
+        $idVehicule_1=$pop["idVehicule_1"];
+        $idVehicule_2=$pop["idVehicule_2"];
+      $vehicule_1=$vehiculeModel->getVehiculeById($idVehicule_1);
+      $vehicule_2=$vehiculeModel->getVehiculeById($idVehicule_2);
+      $temp=array();
+      array_push($temp,$vehicule_1);
+      array_push($temp,$vehicule_2);
+      ##print_r($temp);
+      ##echo "------------";
+      array_push($comps,$temp);
+      unset($temp);
+    }
+        $this->accuilModel->popularComps($comps);
          }
        
     }
@@ -226,7 +245,7 @@ class accueilController{
                     }
                  } else echo "user not found";
      }
-     public function deleteAppreciation(){
+ public function deleteAppreciation(){
         if(isset($_SESSION['user'])){
             $idUser=$_SESSION['user']["id"];
                 if(isset($_GET["idAvis"]) && isset($_GET["idVehicule"])){
@@ -270,9 +289,9 @@ class accueilController{
                  $avisModel=new AvisVehiculeModel();
                  $result=$avisModel->addAvis($id,$idVehicule,$valeur);
                  if ($result) {
-                    $accuilModel=new accueil();
+                    
                     $text="Avis is waiting to be approuved!";
-                    $accuilModel->waitingApprouval($text,"vehicule");
+                    $this->accuilModel->waitingApprouval($text,"vehicule");
                 } else {
                     echo "Add Avis failed failed. Please try again.";
                     
@@ -290,9 +309,9 @@ class accueilController{
                  $avisModel=new AvisMarqueModel();
                  $result=$avisModel->addAvis($id,$idMarque,$valeur);
                  if ($result) {
-                    $accuilModel=new accueil();
+                    
                     $text="Avis is waiting to be approuved!";
-                    $accuilModel->waitingApprouval($text,"marque");
+                    $this->accuilModel->waitingApprouval($text,"marque");
                 } else {
                     echo "Add Avis failed failed. Please try again.";
                     
@@ -351,12 +370,12 @@ class accueilController{
         } else echo "user not found";
      }
     public function showLoginPage(){
-        $accuilModel=new accueil();
-        $accuilModel->login();  
+        
+        $this->accuilModel->login();  
     }
     public function showRegisterPage(){
-        $accuilModel=new accueil();
-        $accuilModel->register();  
+        
+        $this->accuilModel->register();  
     }
 
     public function handleRegister() {
@@ -372,10 +391,10 @@ class accueilController{
             $userModel = new UserModel(); 
             $success = $userModel->addUser($nom, $prenom, $sexe, $dateNaissance, $username, $password);
             if ($success) {
-                $accuilModel=new accueil();
+                
                 $text="Registration is waiting to be approuved!";
                 $id="";
-                $accuilModel->waitingApprouval($text,"register");
+                $this->accuilModel->waitingApprouval($text,"register");
             } else {
                 echo "Registration failed. Please try again.";
                 
@@ -399,17 +418,17 @@ class accueilController{
                 $_SESSION['user'] = $user;
                 header("Location: ./index.php?action=home");
                 } else {
-                    $accuilModel=new accueil();
+                    
                     $text="Registration is waiting to be approuved!";
                     $id="";
-                    $accuilModel->waitingApprouval($text,"register");
+                    $this->accuilModel->waitingApprouval($text,"register");
                 } 
                 
             } else {
-                $accuilModel=new accueil();
+                
                 $text="Wrong credentials";
                 $id="";
-                $accuilModel->waitingApprouval($text,"login");                
+                $this->accuilModel->waitingApprouval($text,"login");                
             }
         } 
 }
@@ -468,7 +487,7 @@ public function handleLogout(){
     $compModel=new ComparaisonModel();
     $VehiculeModel=new VehiculeModel();
     $popularComps=$compModel->getTopPopularComparisons();
-    $accuilModel=new accueil();
+    
     $comps=array();
     foreach ($popularComps as $pop) {
         $idVehicule_1=$pop["idVehicule_1"];
@@ -484,6 +503,47 @@ public function handleLogout(){
       unset($temp);
     }
       ##print_r($comps[0][0][0]["vehicule_name"]);
-   $accuilModel->popularComps($comps);
+   $this->accuilModel->popularComps($comps);
+ }
+ public function popCompDetails(){
+    if (isset($_GET["idVehicule_1"]) && isset($_GET["idVehicule_2"]) ) {
+        $idVehicule1=$_GET["idVehicule_1"];
+       $idVehicule2=$_GET["idVehicule_2"];
+       $VehiculeModel=new VehiculeModel();
+       $temp=array();
+       $vehicule_1=$VehiculeModel->getVehiculeById($idVehicule1);
+      $vehicule_2=$VehiculeModel->getVehiculeById($idVehicule2);
+      array_push($temp,$vehicule_1);
+      array_push($temp,$vehicule_2);
+      $this->accuilModel->displayComp($temp);
+
+    }
+ }
+ public function showProfile(){
+    if (session_status() != PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    if (isset($_SESSION['user'])) {
+          $idUser=$_SESSION['user']["id"];
+          $favorisModel=new FavorisModel();
+          $vehiculeModel=new VehiculeModel();
+          $favoris=$favorisModel->getAllFavoris($idUser);
+          $favoris_tab=array();
+          
+            foreach ($favoris as $fav) {
+            $vehicule=$vehiculeModel->getVehiculeById($fav["idVehicule"]);
+            array_push($favoris_tab,$vehicule);
+            }
+            ##var_dump($favoris_tab);
+            $this->accuilModel->profile($favoris_tab);
+          
+    }
+ }
+
+ public function showNewsPage(){
+    $newsModel=new newsModel();
+        $news=$newsModel->getAllNews();
+        ##var_dump($news);
+        $this->accuilModel->newsPage($news);
  }
 } ?>

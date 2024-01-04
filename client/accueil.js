@@ -118,4 +118,70 @@ if (cpt >= 2) {
 });
 
 /*
+<script>
+    $(document).ready(function () {
+        
+     var compData=sessionStorage.getItem('compResults');
+     var compResults=JSON.parse(compData);
+     if(compResults!=null){
+      var text=$("<h1>").text("Votre derniere comparaison :");  
+     $('#textContainer').append(text); 
+    displayTable(compResults);
+    compResults.forEach(element => {
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+            });}
+            
+    var storedData = sessionStorage.getItem('data');
+    var result = JSON.parse(storedData);
+    
+    })
+
+     function displayCard(imageSrc, cardTitle, buttonText,id) {
+   
+
+    var card = $('<div>').addClass('card').css('width', '18rem');
+
+    var cardImage = $('<img>').addClass('card-img-top').attr('src', imageSrc).attr('alt', 'Card Image');
+
+    var cardBody = $('<div>').addClass('card-body');
+
+    var cardTitleElement = $('<h5>').addClass('card-title').text(cardTitle);
+
+    var button = $('<a>',{style: "border:none;"}).addClass('btn btn-primary').attr('href', `./index.php?action=detailVehicule&idVehicule=${id}`).text(buttonText).css('background-color', '#F41F11');
+
+    cardBody.append(cardTitleElement, button);
+
+    card.append(cardImage, cardBody);
+
+    // Append the new card to #cardContainer
+    $('#cardContainer').append(card);
+   }
+ function displayTable(data){
+         var $table = $("table"); 
+         $table.find("tbody").empty(); 
+         var $thead = $table.find("thead");
+         $thead.empty();
+         var headerRow = '<tr><th scope="col">Features</th>';
+         data.forEach(element => {
+            headerRow += '<th>' + element.vehicule_name + '</th>';  
+         });
+         headerRow += '</tr>';
+         $thead.append(headerRow);
+         var $tbody = $table.find("tbody");
+         data[0].characteristics.forEach(feature => {
+            var featureRow = '<tr><th class="firstcol" scope="row">' + feature.nom + '</th>';
+            data.forEach(element => {
+                let values=[];
+               values.push(element.characteristics_values[feature.id]);
+               for (let index = 0; index < values.length; index++) {
+                    featureRow += '<td>' + values[index] + '</td>';
+                }        
+            
+
+            });
+            featureRow += '</tr>';
+            $tbody.append(featureRow);
+         });
+        
+        }
 */
