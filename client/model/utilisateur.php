@@ -31,10 +31,8 @@ class UserModel
         if ($result && count($result) > 0) {
             $user = $result[0];
             
-            // Verify the password using password_verify
             if ($password==$user['motDePasse']) {
                 
-                // Password is correct, return the user data
                 $db->disconnectDb($conn);
                 return $user;
             }

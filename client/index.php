@@ -1,7 +1,6 @@
 <?php
 require_once("./controller/accueilController.php");
 
-// Set default action to "home" if no action is provided
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 
 $controllerModel = new accueilController();
@@ -84,5 +83,6 @@ switch ($action) {
         $controllerModel->showMarquesSection();
         $controllerModel->showSeparator();
         $controllerModel->showCompPage(); 
+        $controllerModel->showPopularComps();
 }
 ?>

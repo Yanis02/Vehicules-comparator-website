@@ -8,7 +8,6 @@ class VehiCarModel
         $db = new Database();
         $conn = $db->connectDb();
 
-        // Query to retrieve the names of the vehicles
         $queryNames = "
     SELECT CONCAT(m.nom, ' ', mo.nom, ' ', v.nom, ' ', a.annee) AS vehicule_name
     FROM marques m
@@ -23,14 +22,12 @@ class VehiCarModel
         if ($vehiculeNameData) {
             $vehiculeName = $vehiculeNameData[0]['vehicule_name'];
 
-            // Query to retrieve characteristics from the caracteristique table
             $queryCharacteristics = "
                 SELECT id, nom
                 FROM caracteristique;
             ";
             $characteristicsData = $db->request($conn, $queryCharacteristics);
 
-            // Query to retrieve characteristic values by caracteristiqueId
             $queryCharacteristicValues = "
                 SELECT c.id AS caracteristique_id, vc.valeur AS caracteristique_valeur
                 FROM vehicule_caracteristique vc
@@ -39,7 +36,6 @@ class VehiCarModel
             ";
             $characteristicValuesData = $db->request($conn, $queryCharacteristicValues);
 
-            // Organize the characteristic values by caracteristiqueId
             $characteristicsValues = [];
             foreach ($characteristicValuesData as $row) {
                 $characteristicsValues[$row['caracteristique_id']] = $row['caracteristique_valeur'];
@@ -50,7 +46,6 @@ class VehiCarModel
                 WHERE idVehicule = $idVehicule;
             ";
             $imagePathsData = $db->request($conn, $queryImagePaths);
-            // Return the data
             $data = [
                 'vehicule_id' => $idVehicule,
                 'vehicule_name' => $vehiculeName,

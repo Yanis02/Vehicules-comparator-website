@@ -10,6 +10,8 @@ require_once("./model/noteVehicule.php");
 require_once("./model/favoris.php");
 require_once("./model/avisMarque.php");
 require_once("./model/noteMarque.php");
+require_once("./model/comparaison.php");
+
 
 
 
@@ -101,23 +103,24 @@ class accueilController{
         if(isset($_SESSION['user'])){
             $idUser=$_SESSION['user']["id"];
          $accuilModel->personalSection($id,"","marque"); 
-         $avisModele=new AvisMarqueModel();
-         $topAvis=$avisModele->getTopAvisMarques($id);
-         if ($topAvis) {
-             $accuilModel->AvisText();
-             foreach ($topAvis as $avis) {
-                 if(isset($_SESSION['user'])){
-                     $idUser=$_SESSION['user']["id"];
-                 $isAppreciated=$avisModele->checkAppreciation($idUser,$avis["avis_id"]);
-                
-                  $accuilModel->avisMarque($avis,$isAppreciated);
- 
-             }else {
-                 $accuilModel->avisMarque($avis,false);
- 
-             }}
-         } 
+        
         }
+        $avisModele=new AvisMarqueModel();
+        $topAvis=$avisModele->getTopAvisMarques($id);
+        if ($topAvis) {
+            $accuilModel->AvisText();
+            foreach ($topAvis as $avis) {
+                if(isset($_SESSION['user'])){
+                    $idUser=$_SESSION['user']["id"];
+                $isAppreciated=$avisModele->checkAppreciation($idUser,$avis["avis_id"]);
+               
+                 $accuilModel->avisMarque($avis,$isAppreciated);
+
+            }else {
+                $accuilModel->avisMarque($avis,false);
+
+            }}
+        } 
         }
         
     }
@@ -461,5 +464,26 @@ public function handleLogout(){
         
     } else echo "user not found";
  }
-
+ public function showPopularComps(){
+    $compModel=new ComparaisonModel();
+    $VehiculeModel=new VehiculeModel();
+    $popularComps=$compModel->getTopPopularComparisons();
+    $accuilModel=new accueil();
+    $comps=array();
+    foreach ($popularComps as $pop) {
+        $idVehicule_1=$pop["idVehicule_1"];
+        $idVehicule_2=$pop["idVehicule_2"];
+      $vehicule_1=$VehiculeModel->getVehiculeById($idVehicule_1);
+      $vehicule_2=$VehiculeModel->getVehiculeById($idVehicule_2);
+      $temp=array();
+      array_push($temp,$vehicule_1);
+      array_push($temp,$vehicule_2);
+      ##print_r($temp);
+      ##echo "------------";
+      array_push($comps,$temp);
+      unset($temp);
+    }
+      ##print_r($comps[0][0][0]["vehicule_name"]);
+   $accuilModel->popularComps($comps);
+ }
 } ?>

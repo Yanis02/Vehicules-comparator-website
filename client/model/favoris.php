@@ -12,12 +12,10 @@ class FavorisModel
         $resultCheck = $db->request($conn, $queryCheck);
 
         if ($resultCheck && count($resultCheck) > 0) {
-            // Favoris entry already exists, return false
             $db->disconnectDb($conn);
             return false;
         }
 
-        // Add new favoris entry
         $query = "INSERT INTO favoris (idUser, idVehicule) 
                   VALUES ('$idUtilisateur', '$idVehicule')";
 
@@ -36,7 +34,6 @@ class FavorisModel
         $resultCheck = $db->request($conn, $queryCheck);
 
         if ($resultCheck && count($resultCheck) > 0) {
-            // Favoris entry already exists, return false
             $db->disconnectDb($conn);
             return false;
         }else return true;

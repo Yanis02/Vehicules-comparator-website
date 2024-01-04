@@ -797,6 +797,29 @@ public function marquesSectionPage($marques,$type)
         //
         console.log("passed");
        console.log(data);
+       for (let i = 0; i < data.length; i++) {
+          for (let j = i+1; j < data.length; j++) {
+             if(i!=j){
+                $.ajax({
+                        type: "POST",
+                        url: "./model/comparaison.php", 
+                        data: {
+                            idVehicule1: data[i].id,
+                            idVehicule2: data[j].id
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                           
+                        }
+                    });
+             }
+            
+          }        
+       }
        result=[];
        var promises = data.map(element => {
      return new Promise((resolve, reject) => {
@@ -1076,6 +1099,29 @@ public function marquesSectionPage($marques,$type)
         //$('#comparisonForm').submit();
         console.log("passed");
        console.log(data);
+       for (let i = 0; i < data.length; i++) {
+          for (let j = i+1; j < data.length; j++) {
+             if(i!=j){
+                $.ajax({
+                        type: "POST",
+                        url: "./model/comparaison.php", 
+                        data: {
+                            idVehicule1: data[i].id,
+                            idVehicule2: data[j].id
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error:", status, error);
+                           
+                        }
+                    });
+             }
+            
+          }        
+       }
        result=[];
        var promises = data.map(element => {
      return new Promise((resolve, reject) => {
@@ -1627,6 +1673,66 @@ public function avisMarque($a,$isAppreciated){
 public function AvisText(){
     ?>
  <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;"><h1>Avis</h1></div>
+    <?php
+}
+ 
+public function card($imageSrc, $cardTitle, $buttonText, $id) {
+    echo '<div class="card" style="width:250px;height:300px">';
+    echo '<img src="' . $imageSrc . '" alt="Card Image" class="card-img-top">';
+    echo '<div class="card-body">';
+    echo '<h5 class="card-title">' . $cardTitle . '</h5>';
+    echo '<a href="./index.php?action=detailVehicule&idVehicule=' . $id . '" class="btn btn-primary" style="border: none; background-color: #F41F11;">' . $buttonText . '</a>';
+    echo '</div></div>';
+}
+public function popularComps($comp){
+    $numSlides = ceil(count($comp) / 3);
+    ?>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;gap:10px;margin-top:50px;">
+    <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner">
+                <?php for ($i = 0; $i < $numSlides; $i++) : ?>
+                    <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
+                        <div style="display:flex; justify-content:space-around; align-items:center;">
+                            <?php
+                            for ($j = $i * 3; $j < min(($i + 1) * 3, count($comp)); $j++) :
+                            ?>
+                           <?php
+           foreach ($comp as $cmp) {
+            ?>
+            <div style="display:flex;justify-content:space-evenly;align-items:center;border:solid 2px #F41F11;border-radius:10px;width:800px;height:350px;">
+             <?php
+              $this->card("./img/vehicules/". $cmp[0][0]["image_paths"][0]["chemin"],$cmp[0][0]["vehicule_name"],"Voir details",1);
+            echo "<h3>VS</h3>";
+              $this->card("./img/vehicules/".$cmp[1][0]["image_paths"][0]["chemin"],$cmp[1][0]["vehicule_name"],"Voir details",1);
+
+             ?>
+            </div>
+            <?php
+           }
+          ?>
+                            
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                <?php endfor; ?>
+                </div>
+               <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z\'/%3E%3C/svg%3E') !important;"
+ >                </span>
+                 <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                 <span class="carousel-control-next-icon" aria-hidden="true" style="background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%23F41F11\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z\'/%3E%3C/svg%3E') !important;"
+
+ >                </span>
+                <span class="visually-hidden">Next</span>
+             </button>
+          </div>
+         
+         
+         
+         
+   </div>
     <?php
 }
 }
