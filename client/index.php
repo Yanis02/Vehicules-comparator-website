@@ -1,9 +1,29 @@
 <?php
 require_once("./controller/accueilController.php");
+require_once("./controller/marquesController.php");
+require_once("./controller/vehiculeController.php");
+require_once("./controller/avisController.php");
+require_once("./controller/newsController.php");
+require_once("./controller/authController.php");
+require_once("./controller/noteController.php");
+require_once("./controller/favorisController.php");
+require_once("./controller/appreciationController.php");
+require_once("./controller/comparaisonController.php");
+require_once("./controller/profileController.php");
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 
 $controllerModel = new accueilController();
+$marquesController=new MarquesController();
+$vehiculeController=new VehiculeController();
+$avisController=new AvisController();
+$newsController=new NewsController();
+$authController=new AuthController();
+$noteController=new NoteController();
+$favorisController=new FavorisController();
+$appreciationController=new AppreciationController();
+$comparaisonController=new ComparaisonController();
+$profileController=new ProfileController();
 $controllerModel->showHead();
 $controllerModel->showHeader();
 
@@ -11,90 +31,88 @@ $controllerModel->showHeader();
 switch ($action) {
     case "comparateur": 
         $controllerModel->showNavbar();
-        $controllerModel->showComp();
+        $marquesController->showComp();
         break;
     case "detailVehicule" :
         $controllerModel->showNavbar();
-        $controllerModel->showVehiculeDetails();
+        $vehiculeController->showVehiculeDetails();
          break;
          case "avisVehicule" :
             $controllerModel->showNavbar();
-            $controllerModel->showVehiculeAvis();
+            $vehiculeController->showVehiculeAvis();
              break;
    case  "marques" :
     $controllerModel->showNavbar();
-    $controllerModel->showMarquesSectionPage();
-    $controllerModel->showMarque();
+    $marquesController->showMarquesPage();
     break; 
     case  "avis" :
         $controllerModel->showNavbar();
-        $controllerModel->showMarquesSectionPageForAvis();
-        $controllerModel->showAvisPage();
+        $marquesController->showMarquesSectionPageForAvis();
+        $avisController->showAvisPage();
         break; 
 
     case "news" :
         $controllerModel->showNavbar();
-        $controllerModel->showNewsPage();
+        $newsController->showNewsPage();
         break;    
     case "auth" :
-        $controllerModel->showLoginPage();
+        $authController->showLoginPage();
         break;
     case "register" :
-        $controllerModel->showRegisterPage();
+        $authController->showRegisterPage();
         break;
     case "handleRegister" :
-        $controllerModel->handleRegister();
+        $authController->handleRegister();
         break;
     case "loginHandler" :
-        $controllerModel->handleLogin();
+        $authController->handleLogin();
         break;
         case "logoutHandler" :
-            $controllerModel->handleLogout();
+            $authController->handleLogout();
             break;
         case "handleAvis" :
-            $controllerModel->handleAvis();           
+            $avisController->handleAvis();           
             break;
             case "handleNote" :
-                $controllerModel->handleNote();           
+                $noteController->handleNote();           
                 break;
                 case "addFavoris" :
-                    $controllerModel->handleFavoris();           
+                    $favorisController->handleFavoris();           
                     break;
             case "deleteFavoris" :
-                $controllerModel->deleteFavoris();
+                $favorisController->deleteFavoris();
                 break;
             case "appreciateAvis":
-                $controllerModel->handleAppreciation();
+                $appreciationController->handleAppreciation();
                 break; 
                 case "deleteAppreciation" :
-                    $controllerModel->deleteAppreciation();
+                    $appreciationController->deleteAppreciation();
                     break; 
                     case "handleAvisMarque" :
-                        $controllerModel->handleAvisMarque();           
+                        $avisController->handleAvisMarque();           
                         break;
                         case "handleNoteMarque" :
-                            $controllerModel->handleNoteMarque();           
+                            $noteController->handleNoteMarque();           
                             break;
                             case "appreciateAvisMarque" :
-                                $controllerModel->handleAppreciationMarque();           
+                                $appreciationController->handleAppreciationMarque();           
                                 break; 
                                 case "deleteAppreciationMarque" :
-                                    $controllerModel->deleteAppreciationMarque();           
+                                    $appreciationController->deleteAppreciationMarque();           
                                     break;
                                     case "popularComp" :
                                         $controllerModel->showNavbar();
-                                        $controllerModel->popCompDetails();
+                                        $comparaisonController->popCompDetails();
                                         break; 
                                     case "profile" :
                                         $controllerModel->showNavbar();
-                                        $controllerModel->showProfile();
+                                        $profileController->showProfile();
                                         break;                       
 
     default:
         $controllerModel->displayNewsSection();
         $controllerModel->showNavbar();
         $controllerModel->showMarquesSection();
-        $controllerModel->showSeparator();
         $controllerModel->showCompPage(); 
         $controllerModel->showPopularComps();
 }
