@@ -61,7 +61,7 @@ public function comparaison($marques)
        $('#textContainer').append(text); 
       displayTable(compResults);
       compResults.forEach(element => {
-                  displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+                  displayCard(`./img/vehicules/${element.image_paths[0].chemin}`,element.vehicule_name,"Voir details",element.vehicule_id);
               });}
               
       var storedData = sessionStorage.getItem('data');
@@ -292,7 +292,7 @@ public function comparaison($marques)
               console.log(result);
               sessionStorage.setItem("compResults",JSON.stringify(result));
               result.forEach(element => {
-                  displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+                  displayCard(`./img/vehicules/${element.image_paths[0].chemin}`,element.vehicule_name,"Voir details",element.vehicule_id);
               });
               displayTable(result);
           }
@@ -439,7 +439,7 @@ public function comparaisonV($marques,$idVehicule,$idMarque,$idModele,$idVersion
      $('#textContainer').append(text); 
     displayTable(compResults);
     compResults.forEach(element => {
-                displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+                displayCard(`./img/vehicules/${element.image_paths[0].chemin}`,element.vehicule_name,"Voir details",element.vehicule_id);
             });}
    })
 
@@ -668,7 +668,7 @@ public function comparaisonV($marques,$idVehicule,$idMarque,$idModele,$idVersion
            sessionStorage.setItem("compResults",JSON.stringify(result));
 
            result.forEach(element => {
-               displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir details",element.vehicule_id);
+               displayCard(`./img/vehicules/${element.image_paths[0].chemin}`,element.vehicule_name,"Voir details",element.vehicule_id);
            });
            displayTable(result);
        }

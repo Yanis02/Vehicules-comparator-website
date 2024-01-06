@@ -29,6 +29,7 @@ class GestionVehicules{
         echo '</tbody>';
         echo '</table>';
         echo '</div>';
+        echo '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterVehicule">Ajouter un vehicule</a>';
         echo '</div>';
 
     }
@@ -91,11 +92,13 @@ class GestionVehicules{
         <?php
 
     }
-    public function addVehicule($marques){
+    
+    public function addVehicule($marques,$caracteristics){
         ?>
-        <form id="form">
+        <form enctype="multipart/form-data" method="POST" id="form" action="./index.php?action=addVehicule" style="width:800px;display:flex;flex-direction:column;align-items:center;gap:15px">
             <!-- Marque Dropdown 54-->
-            <select name="marque" id="marque" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this, <?php echo $i; ?>)" required>
+            <label for="marque">Marque</label>
+            <select name="marque" id="marque" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this)" required>
                     <option value="">Marque</option>
                     <?php foreach ($marques as $marque) : ?>
                         <option value='<?php echo $marque['id']; ?>'><?php echo $marque['nom']; ?></option>
@@ -103,24 +106,38 @@ class GestionVehicules{
                 </select>
 
                 <!-- Modele Dropdown -->
-                <select name="modele" id="modele" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this, <?php echo $i; ?>)" disabled required>
+                <label for="modele">Modele</label>
+                <select name="modele" id="modele" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this)" disabled required>
                     <option value="">Modele</option>
                 </select>
 
                 <!-- Version Dropdown -->
-                <select name="version" id="version" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateAnnee(this, <?php echo $i; ?>)" disabled required>
+                <label for="version">Version</label>
+                <select name="version" id="version" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"  disabled required>
                     <option value="">Version</option>
                 </select>
-                <!-- Annee Dropdown -->
-                <input name="annee" id="annee"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" placeholder="Annee">
-                    
-                <button type="button" onclick="submitForm()"    style="width:250px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Comparer</button>
+                <label for="annee">Année</label>
+                <input name="annee" id="annee"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+                <label for="type">Type</label>
+                <input name="type" id="type"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+                 <?php
+                 foreach ($caracteristics as $caracteristic) {
+                    ?>
+                    <label for="car_<?php echo $caracteristic["id"]?>"><?php echo $caracteristic["nom"]?></label>
+                    <input name="car_<?php echo $caracteristic["id"]?>" id="car_<?php echo $caracteristic["id"]?>"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+
+                    <?php
+                 }
+                 ?>
+                 <label for="photo">Photo</label>
+                <input name="photo" id="photo" type="file"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required accept="image/*">
+                <button type="submit" style="width:150px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
 
         </form>
         <script>
 
 
-function updateModeles(element, containerIndex) {
+function updateModeles(element) {
     var container = $("#form");
     var marqueId = $(element).val();
     console.log(marqueId);
@@ -148,7 +165,7 @@ function updateModeles(element, containerIndex) {
     });
 }
 
-function updateVersions(element, containerIndex) {
+function updateVersions(element) {
     var container = $("#form");
     var modeleId = $(element).val();
     console.log(modeleId);

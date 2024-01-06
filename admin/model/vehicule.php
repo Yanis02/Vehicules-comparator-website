@@ -2,10 +2,15 @@
 require_once("database.php");
 
 class VehiculeModel{
+    private $db;
+
+    public function __construct() {
+        $this->db = new Database();
+    }
     public function getAllVehicules()
 {
-    $db = new Database();
-    $conn = $db->connectDb();
+    
+    $conn =$this->db->connectDb();
 
     $query = "SELECT vehicule.id as vehicule_id, vehicule.type, vehicule.annee as vehicule_annee, 
                      version.id as version_id, version.nom as version_nom, 
@@ -17,7 +22,7 @@ class VehiculeModel{
               
               ";
 
-    $vehiculeData = $db->request($conn, $query);
+    $vehiculeData = $this->db->request($conn, $query);
 
     $result = array();
     foreach ($vehiculeData as $item) {
@@ -29,7 +34,7 @@ class VehiculeModel{
         $nomVersion=$item['version_nom'];
         $anneeVehicule=$item['vehicule_annee'];
         $req="SELECT marques.nom as marque_nom from marques WHERE marques.id = $idMarque ";
-        $nomMarque=$db->request($conn,$req);
+        $nomMarque=$this->db->request($conn,$req);
         $queryNames = "
             SELECT CONCAT(m.nom, ' ', mo.nom, ' ', v.nom, ' ', a.annee) AS vehicule_name
             FROM marques m
@@ -39,7 +44,7 @@ class VehiculeModel{
             WHERE m.id = $idMarque AND mo.id = $idModele AND v.id = $idVersion AND a.id= $idVehicule;
         ";
 
-        $vehiculeNameData = $db->request($conn, $queryNames);
+        $vehiculeNameData = $this->db->request($conn, $queryNames);
 
         if ($vehiculeNameData) {
             $vehiculeName = $vehiculeNameData[0]['vehicule_name'];
@@ -59,14 +64,13 @@ class VehiculeModel{
         }
     }
 
-    $db->disconnectDb($conn);
+    $this->db->disconnectDb($conn);
      
     return array_values($result);
 }
 public function getVehiculeById($vehiculeId)
 {
-    $db = new Database();
-    $conn = $db->connectDb();
+    $conn = $this->db->connectDb();
 
     $query = "SELECT vehicule.id as vehicule_id, vehicule.type, vehicule.annee, 
                      version.id as version_id, version.nom as version_nom, 
@@ -78,7 +82,7 @@ public function getVehiculeById($vehiculeId)
               WHERE vehicule.id = $vehiculeId
               ";
 
-    $vehiculeData = $db->request($conn, $query);
+    $vehiculeData = $this->db->request($conn, $query);
 
     $result = array();
     foreach ($vehiculeData as $item) {
@@ -96,7 +100,7 @@ public function getVehiculeById($vehiculeId)
             WHERE m.id = $idMarque AND mo.id = $idModele AND v.id = $idVersion AND a.id= $idVehicule;
         ";
 
-        $vehiculeNameData = $db->request($conn, $queryNames);
+        $vehiculeNameData = $this->db->request($conn, $queryNames);
 
         if ($vehiculeNameData) {
             $vehiculeName = $vehiculeNameData[0]['vehicule_name'];
@@ -105,7 +109,7 @@ public function getVehiculeById($vehiculeId)
                 SELECT id, nom
                 FROM caracteristique;
             ";
-            $characteristicsData = $db->request($conn, $queryCharacteristics);
+            $characteristicsData = $this->db->request($conn, $queryCharacteristics);
 
             $queryCharacteristicValues = "
                 SELECT c.id AS caracteristique_id, vc.valeur AS caracteristique_valeur
@@ -113,7 +117,7 @@ public function getVehiculeById($vehiculeId)
                 JOIN caracteristique c ON vc.idCaracteristique = c.id
                 WHERE vc.idVehicule = $idVehicule;
             ";
-            $characteristicValuesData = $db->request($conn, $queryCharacteristicValues);
+            $characteristicValuesData = $this->db->request($conn, $queryCharacteristicValues);
 
             $characteristicsValues = [];
             foreach ($characteristicValuesData as $row) {
@@ -125,7 +129,7 @@ public function getVehiculeById($vehiculeId)
                 FROM imagesvehicules
                 WHERE idVehicule = $idVehicule;
             ";
-            $imagePathsData = $db->request($conn, $queryImagePaths);
+            $imagePathsData = $this->db->request($conn, $queryImagePaths);
 
             $data = [
                 'vehicule_id' => $idVehicule,
@@ -142,24 +146,55 @@ public function getVehiculeById($vehiculeId)
         }
     }
 
-    $db->disconnectDb($conn);
+    $this->db->disconnectDb($conn);
      
     return array_values($result);
 }
 public function updateValue($idVehicule, $idCharacteristic, $newValue){
-    $db = new Database();
-    $conn = $db->connectDb();
+    $conn = $this->db->connectDb();
 
     $query = "
     UPDATE vehicule_caracteristique
     SET valeur = '$newValue'
     WHERE idVehicule = $idVehicule AND idCaracteristique = $idCharacteristic;
-";
-   $result= $db->request($conn, $query);
-    $db->disconnectDb($conn);
+ ";
+   $result= $this->db->request($conn, $query);
+   $this->db->disconnectDb($conn);
     header('Content-Type: application/json');
     echo json_encode($result);  
 }
+public function addVehicule($versionId, $annee, $type) {
+    $conn = $this->db->connectDb();
+
+    $existingVehicleId = $this->getExistingVehicleId($versionId, $annee, $type);
+
+    if ($existingVehicleId) {
+        return false;
+    } else {
+        // Vehicle doesn't exist, insert a new record
+        $query = "INSERT INTO vehicule (idVersion, annee, type) VALUES ($versionId, $annee, '$type')";
+
+        $this->db->request($conn, $query);
+
+        // Get the ID of the newly inserted vehicle
+        $newVehicleId = $conn->lastInsertId();
+
+        $this->db->disconnectDb($conn);
+
+        return $newVehicleId;
+    }
+}
+
+
+private function getExistingVehicleId($versionId, $annee, $type) {
+    $conn = $this->db->connectDb();
+
+    $query = "SELECT id FROM vehicule WHERE idVersion = $versionId AND annee = $annee AND type = '$type'";
+    $existingVehicleId = $this->db->request($conn,$query);
+    $this->db->disconnectDb($conn);
+    return !empty($existingVehicleId);
+}
+
    
 }
 if (isset($_POST['idVehicule']) && isset($_POST['idCharacteristic']) && isset($_POST['newValue']) ) {

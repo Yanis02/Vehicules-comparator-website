@@ -12,7 +12,12 @@ switch ($action) {
     case "detailVehicule": 
         $vehiculeController->showVehiculeDetails();
         break;
-        
+    case "ajouterVehicule": 
+        $vehiculeController->showVehiculeForm();
+         break;    
+         case "addVehicule": 
+            $vehiculeController->addVehicule();
+             break;    
     
     }
 

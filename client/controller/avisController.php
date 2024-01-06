@@ -41,6 +41,8 @@ class AvisController{
         
      }
      public function handleAvisMarque(){
+        $commun=new Commun();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if(isset($_SESSION['user'])){
                 $id=$_SESSION['user']["id"];
@@ -51,7 +53,7 @@ class AvisController{
                  if ($result) {
                     
                     $text="Avis is waiting to be approuved!";
-                    $this->accuilModel->waitingApprouval($text,"marque");
+                    $commun->waitingApprouval($text,"marque");
                 } else {
                     echo "Add Avis failed failed. Please try again.";
                     
