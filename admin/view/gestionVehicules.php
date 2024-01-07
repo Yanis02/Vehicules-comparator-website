@@ -34,11 +34,25 @@ class GestionVehicules{
 
     }
     public function vehiculeDetails($vehicule){
+        echo '<div style="width: 100%; margin: 10px auto; display: flex;flex-direction:column ; align-items: center;gap:10px;">';
         echo '<div style="width: 80%; margin: 10px auto; display: flex; justify-content: space-evenly; align-items: center;">';
         echo '<h2>' . $vehicule[0]['vehicule_name'] . '</h2>';
-        echo '<img class="card-img-top w-25" src="./img/vehicules/' . $vehicule[0]['image_paths'][0]['chemin'] . '" alt="' . $vehicule[0]['vehicule_name'] . '">';
+        echo '<img class="card-img-top w-25" src="../client/img/vehicules/' . $vehicule[0]['image_paths'][0]['chemin'] . '" alt="' . $vehicule[0]['vehicule_name'] . '">';
         echo '</div>';
-    
+        echo '<div style="width: 80%; margin: 10px auto; display: flex;flex-direction:column; justify-content: space-evenly;">';
+        ?>
+          <div style="display:flex;justify-content:start;align-items:center;gap:50px;">
+          <h3>Type :  </h3>
+          <input id="typeV" style="border-radius:7px;font-size:20px;font-weight:300;width:40%;outline:none;background:white;color:black;border:none" disabled value="<?php echo $vehicule[0]['vehicule_type'] ?>"  >
+        </div>
+        <div style="display:flex;justify-content:start;align-items:center;gap:50px;">
+        <h3>Année :  </h3>
+          <input id="anneeV" style="border-radius:7px;font-size:20px;font-weight:300;width:40%;outline:none;background:white;color:black;border:none" disabled value="<?php echo $vehicule[0]['vehicule_annee'] ?>"  >
+        </div>
+        <button id="btn_vehicule" onclick="updateVehicule(<?php echo $vehicule[0]['vehicule_id']?>)" type="button" class="btn btn-primary" style="width:150px;border:none;background-color:#F41F11">Modifier</button>
+
+        <?php
+        echo '</div>';
         echo '<table style="width: 80%; margin: 10px auto; border-collapse: collapse; text-align: left; font-size: 20px; font-weight: 200px; border: solid 1px; padding: 10px; border-radius: 5px;">';
         echo '<tr><th>Characteristic</th><th>Value</th><th>Modification</th></tr>';
     
@@ -46,15 +60,71 @@ class GestionVehicules{
             $characteristicValue = $vehicule[0]['characteristics_values'][$characteristic['id']];
             echo '<tr>';
             echo '<td>' . $characteristic['nom'] . '</td>';
-            echo '<td><input type="text" style="outline:none;background:white;color:black;border:none" disabled id=value'. $characteristic['id'] . ' value="' . $characteristicValue . '"></td>';
+            echo '<td><input  type="text" style="border-radius:7px;outline:none;background:white;color:black;border:none" disabled id=value'. $characteristic['id'] . ' value="' . $characteristicValue . '"></td>';
             echo '<td><button id="btn'. $characteristic['id'] . '" onclick="editValues('. $characteristic['id'] .', ' . $vehicule[0]['vehicule_id'] .')" class="btn btn-primary" style="border:none;background-color:#F41F11">Modifier</button></td>';
             echo '</tr>';
         }
     
         echo '</table>';
         ?>
+        <button style="border:none;background-color:#F41F11" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Supprimer le vehicule</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer cet vehicule?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" style="border:none;background-color:#F41F11" data-bs-dismiss="modal">Non</button>
+        <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=deleteVehicule&id=<?php echo $vehicule[0]['vehicule_id']?>">Oui</a>      </div>
+    </div>
+  </div>
+</div>
+        <?php
+        echo '</div>';
+
+        ?>
         <script>
-            function editValues(idCharacteristic, idVehicule) {
+        function updateVehicule(idVehicule){
+            var typeInput=$('#typeV');
+            var anneeInput=$('#anneeV');
+            var btn=$('#btn_vehicule');
+            if (btn.text()=== 'Modifier') {
+                btn.text('Submit');
+                typeInput.prop('disabled', false).css('border', '1px solid #F41F11');
+                anneeInput.prop('disabled', false).css('border', '1px solid #F41F11');
+
+            } else {
+                typeInput.prop('disabled', true).css('border', 'none');
+                anneeInput.prop('disabled', true).css('border', 'none');
+                type=typeInput.val();
+                annee=anneeInput.val();
+                $.ajax({
+            type: "POST",
+            url: "./model/vehicule.php",
+            data: {idVehicule: idVehicule,
+                   type:type,
+                   annee:annee},
+            dataType: "json",
+            success: function (data) {
+                console.log("updated");
+            },
+            error: function (xhr, status, error) {
+                console.log("failed");
+                console.error("AJAX Error:", status, error);
+            }
+        });
+               btn.text('Modifier');
+
+                
+            }
+        }
+        function editValues(idCharacteristic, idVehicule) {
                 console.log(idCharacteristic);
             var inputElement = $('#value' + idCharacteristic);
             var buttonElement = $('#btn' + idCharacteristic);
@@ -93,7 +163,8 @@ class GestionVehicules{
 
     }
     
-    public function addVehicule($marques,$caracteristics){
+    public function addVehicule($marques,$caracteristics)
+{
         ?>
         <form enctype="multipart/form-data" method="POST" id="form" action="./index.php?action=addVehicule" style="width:800px;display:flex;flex-direction:column;align-items:center;gap:15px">
             <!-- Marque Dropdown 54-->
@@ -137,7 +208,7 @@ class GestionVehicules{
         <script>
 
 
-function updateModeles(element) {
+ function updateModeles(element) {
     var container = $("#form");
     var marqueId = $(element).val();
     console.log(marqueId);
@@ -163,9 +234,9 @@ function updateModeles(element) {
             console.error("AJAX Error:", status, error);
         }
     });
-}
+ }
 
-function updateVersions(element) {
+  function updateVersions(element) {
     var container = $("#form");
     var modeleId = $(element).val();
     console.log(modeleId);
@@ -190,10 +261,10 @@ function updateVersions(element) {
             console.error("AJAX Error:", status, error);
         }
     });
-}
+  }
 
    </script>
         <?php
-    }
+}
 }
 ?>

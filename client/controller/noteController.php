@@ -12,7 +12,7 @@ class NoteController{
                     $idVehicule=filter_input(INPUT_POST, 'idVehicule', FILTER_SANITIZE_STRING);
                  $noteModel=new NoteVehiculeModel();
                  $result=$noteModel->addNote($id,$idVehicule,$valeur);
-                    header("Location: ./index.php?action=home");
+                 header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
                     
             } else echo "user not found";
         }
@@ -26,8 +26,8 @@ class NoteController{
                     $idMarqueNote=filter_input(INPUT_POST, 'idMarqueNote', FILTER_SANITIZE_STRING);
                  $noteModel=new NoteMarqueModel();
                  $result=$noteModel->addNote($id,$idMarqueNote,$valeur);
-                    header("Location: ./index.php?action=home");
-                    echo "Add Note failed failed. Please try again.";
+                 header("Location: ./index.php?action=marques&id=" . $idMarqueNote);
+                 #echo "Add Note failed failed. Please try again.";
                     
             } else echo "user not found";
         }

@@ -33,7 +33,9 @@ class AuthController{
                 
                 $text="Registration is waiting to be approuved!";
                 $id="";
-                $commun->waitingApprouval($text,"register");
+                #$commun->waitingApprouval($text,"register");
+                header("Location: ./index.php?action=home");
+
             } else {
                 echo "Registration failed. Please try again.";
                 

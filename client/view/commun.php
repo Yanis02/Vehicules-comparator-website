@@ -28,7 +28,24 @@ class Commun{
     <input name="        <?php if($type==="vehicule") echo "idVehicule"; else echo "idMarqueAvis";  ?>" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $id?>>
     <label for="avis" style="margin-right:50%;">Ajouter un avis :</label>
     <input name="avis" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required >
-    <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
+    <button style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Ajouter</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Votre avis sera publier une fois validé par un administrateur
+      </div>
+      <div class="modal-footer">
+      <button type="submit" style="width:120px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Compris</button>
+    </div>
+    </div>
+  </div>
+ </div>
     </form>
     <form method="post" action="    <?php if($type==="vehicule") echo "./index.php?action=handleNote"; else echo "./index.php?action=handleNoteMarque";  ?>" style="width:700px;padding-left:50px;margin:20px;">
     <input name="        <?php if($type==="vehicule") echo "idVehicule"; else echo "idMarqueNote";  ?>" type="text" style="width:80%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;display:none" required value=<?php echo $id?>>    <label for="note" style="margin-right:50%;">Ajouter une note :</label>

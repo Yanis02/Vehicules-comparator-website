@@ -31,8 +31,10 @@ class AvisController{
                  if ($result) {
                     
                     $text="Avis is waiting to be approuved!";
-                    $commun->waitingApprouval($text,"vehicule");
-                } else {
+                    #$commun->waitingApprouval($text,"vehicule");
+                    header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
+                    exit();
+                                    } else {
                     echo "Add Avis failed failed. Please try again.";
                     
                 }
@@ -53,7 +55,9 @@ class AvisController{
                  if ($result) {
                     
                     $text="Avis is waiting to be approuved!";
-                    $commun->waitingApprouval($text,"marque");
+                   # $commun->waitingApprouval($text,"marque");
+                   header("Location: ./index.php?action=marques&id=" . $idMarque);
+                    exit();
                 } else {
                     echo "Add Avis failed failed. Please try again.";
                     

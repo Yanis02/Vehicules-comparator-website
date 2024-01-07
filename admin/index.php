@@ -5,10 +5,12 @@ require_once("./controller/layoutController.php");
 $layoutController=new layoutController();
 $vehiculeController=new vehiculesController();
 $layoutController->showHead();
-$vehiculeController->showVehiculesTable();
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 switch ($action) {
+    case "home":
+        $vehiculeController->showVehiculesTable();
+              break;
     case "detailVehicule": 
         $vehiculeController->showVehiculeDetails();
         break;
@@ -17,7 +19,10 @@ switch ($action) {
          break;    
          case "addVehicule": 
             $vehiculeController->addVehicule();
-             break;    
+             break; 
+             case "deleteVehicule": 
+                $vehiculeController->deleteVehicule();
+                 break;    
     
     }
 

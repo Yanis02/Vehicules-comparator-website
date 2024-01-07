@@ -35,10 +35,10 @@ class VehiculeController{
         $marquesModel=new marqueModel();
         $marques=$marquesModel->getAllMarques();
         $comparateurView->comparaisonV($marques,$vehicule[0]["vehicule_id"],$vehicule[0]["marque_id"],$vehicule[0]["modele_id"],$vehicule[0]["version_id"]);
-        $commun->separator();
         $avisModele=new AvisVehiculeModel();
         $topAvis=$avisModele->getTopAvisVehicules($id);
         if ($topAvis) {
+            $commun->separator();
             $commun->AvisText();
             foreach ($topAvis as $avis) {
                 if(isset($_SESSION['user'])){
@@ -76,8 +76,11 @@ class VehiculeController{
       array_push($comps,$temp);
       unset($temp);
      }
-      $commun->separator();
+     if ($popularComps) {
+        $commun->separator();
       $comparateurView->popularComps($comps);
+     }
+      
          }
        
     }  

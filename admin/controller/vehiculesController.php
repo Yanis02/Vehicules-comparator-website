@@ -56,20 +56,28 @@ class vehiculesController{
             foreach ($vehiculeFeatures as $featureId => $value) {
                 $caracModel->insertVehiculeCaracteristique($lastId,$featureId,$value);
             }
-           }
-           if (isset($_FILES['photo'])) {
-            $uploadDir = '../client/img/vehicules/';
-            $uploadFile = $uploadDir . basename($_FILES['photo']['name']);
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploadFile)) {
-                echo 'File has been uploaded successfully.';
-                $imageModel->addImage($lastId,basename($_FILES['photo']['name']));
+            if (isset($_FILES['photo'])) {
+                $uploadDir = '../client/img/vehicules/';
+                $uploadFile = $uploadDir . basename($_FILES['photo']['name']);
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploadFile)) {
+                    #echo 'File has been uploaded successfully.';
+                    $imageModel->addImage($lastId,basename($_FILES['photo']['name']));
+                } else {
+                    echo 'Error uploading the file.';
+                }
             } else {
-                echo 'Error uploading the file.';
+                echo 'Invalid file upload.';
             }
-        } else {
-            echo 'Invalid file upload.';
+           }
+           
+        } 
+    }  
+    public function deleteVehicule(){
+        if (isset($_GET['id'])) {
+            $id=$_GET['id'];
+            $vehiculeModel=new VehiculeModel();
+            $vehiculeModel->deleteVehicule($id);
         }
-        }
-    }        
+    }      
 }
 ?>

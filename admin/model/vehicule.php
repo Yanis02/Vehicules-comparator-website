@@ -72,7 +72,7 @@ public function getVehiculeById($vehiculeId)
 {
     $conn = $this->db->connectDb();
 
-    $query = "SELECT vehicule.id as vehicule_id, vehicule.type, vehicule.annee, 
+    $query = "SELECT vehicule.id as vehicule_id, vehicule.type as vehicule_type, vehicule.annee as vehicule_annee, 
                      version.id as version_id, version.nom as version_nom, 
                      modele.id as model_id, modele.nom as modele_nom,
                      modele.idMarque as marque_id
@@ -90,7 +90,8 @@ public function getVehiculeById($vehiculeId)
         $idVersion = $item['version_id'];
         $idModele = $item['model_id'];
         $idMarque = $item['marque_id'];
-
+        $type=$item["vehicule_type"];
+        $annee=$item["vehicule_annee"];
         $queryNames = "
             SELECT CONCAT(m.nom, ' ', mo.nom, ' ', v.nom, ' ', a.annee) AS vehicule_name
             FROM marques m
@@ -139,7 +140,9 @@ public function getVehiculeById($vehiculeId)
                 'image_paths' => $imagePathsData,
                 'marque_id' => $idMarque,
                 'version_id' => $idVersion,
-                'modele_id' => $idModele
+                'modele_id' => $idModele,
+                "vehicule_type"=> $type,
+                "vehicule_annee"=>$annee
             ];
 
             $result[] = $data;
@@ -163,6 +166,18 @@ public function updateValue($idVehicule, $idCharacteristic, $newValue){
     header('Content-Type: application/json');
     echo json_encode($result);  
 }
+public function updateVehicule($id,$type,$annee){
+    $conn = $this->db->connectDb();
+    $query = "
+    UPDATE vehicule
+    SET type = '$type' , annee='$annee'
+    WHERE id = $id;";
+    $result=$this->db->request($conn, $query);
+    $this->db->disconnectDb($conn);
+    header('Content-Type: application/json');
+    echo json_encode($result); 
+
+}
 public function addVehicule($versionId, $annee, $type) {
     $conn = $this->db->connectDb();
 
@@ -171,12 +186,10 @@ public function addVehicule($versionId, $annee, $type) {
     if ($existingVehicleId) {
         return false;
     } else {
-        // Vehicle doesn't exist, insert a new record
         $query = "INSERT INTO vehicule (idVersion, annee, type) VALUES ($versionId, $annee, '$type')";
 
         $this->db->request($conn, $query);
 
-        // Get the ID of the newly inserted vehicle
         $newVehicleId = $conn->lastInsertId();
 
         $this->db->disconnectDb($conn);
@@ -194,6 +207,13 @@ private function getExistingVehicleId($versionId, $annee, $type) {
     $this->db->disconnectDb($conn);
     return !empty($existingVehicleId);
 }
+public function deleteVehicule($id){
+    $db = new Database();
+        $conn = $db->connectDb();
+        $query = "DELETE FROM vehicule WHERE id = '$id'";
+        $db->request($conn, $query);
+        $db->disconnectDb($conn);
+}
 
    
 }
@@ -204,4 +224,13 @@ if (isset($_POST['idVehicule']) && isset($_POST['idCharacteristic']) && isset($_
     $VehiculeModel=new VehiculeModel();
     $VehiculeModel->updateValue($idVehicule, $idCharacteristic, $newValue);
    }
+   if (isset($_POST['idVehicule']) && isset($_POST['type']) && isset($_POST['annee']) ) {
+    $idVehicule=$_POST['idVehicule'];
+    $typeV=$_POST['type'];
+    $AnneeV=$_POST['annee'];
+    $VehiculeModel=new VehiculeModel();
+    $VehiculeModel->updateVehicule($idVehicule, $typeV, $AnneeV);
+   }
+
+
 ?>
