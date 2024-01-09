@@ -33,11 +33,84 @@ class GestionVehicules{
         echo '</div>';
 
     }
-    public function vehiculeDetails($vehicule){
+
+    function generateDataTable($vehicules)
+    {   
+        echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
+        echo '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>';
+        echo '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>';
+        echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>';
+    
+        echo '<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">';
+        echo '<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>';
+        echo '<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>';
+        echo '<style>
+        
+       
+        a.page-link {
+            background-color: #F41F11 !important;
+            border-color: white !important;
+            color: #fff !important;
+        }
+     </style>';
+    
+        echo '<script>
+            $(document).ready(function() {
+                $("#dataTable").DataTable();
+            });
+        </script>';
+    
+        echo '<div class="container mt-4">
+             <h1>Gestion des véhicules</h1>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr><th scope="col">Nom</th>
+                <th scope="col">Marque</th>
+                <th scope="col">Modele</th>
+                <th scope="col">Version</th>
+                <th scope="col">Annee</th>
+                <th scope="col">Details</th>
+                </tr></thead><tbody>';
+    
+        foreach ($vehicules as $vehicule) {
+            echo '<tr><td class="firstcol" scope="row">' . $vehicule['vehicule_name'] . '</td>';
+            echo '<td class="firstcol" scope="row">' . $vehicule['marque_nom'] . '</td>';
+            echo '<td class="firstcol" scope="row">' . $vehicule['modele_nom'] . '</td>';
+            echo '<td class="firstcol" scope="row">' . $vehicule['version_nom'] . '</td>';
+            echo '<td class="firstcol" scope="row">' . $vehicule['annee'] . '</td>';
+            echo '<td class="firstcol" scope="row"> <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=detailVehicule&idVehicule=' . $vehicule['vehicule_id'] . '"> Voir plus </a></td>';
+            echo '</tr>';
+        }
+    
+        echo '</tbody></table>';
+        echo '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterVehicule">Ajouter un vehicule</a>
+        <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterCarac">Ajouter une caracteristique</a>
+        <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=supprimerCarac">Supprimer une caracteristique</a>
+        
+        </div>';
+        
+    }
+
+    public function vehiculeDetails($vehicule)
+{
         echo '<div style="width: 100%; margin: 10px auto; display: flex;flex-direction:column ; align-items: center;gap:10px;">';
         echo '<div style="width: 80%; margin: 10px auto; display: flex; justify-content: space-evenly; align-items: center;">';
         echo '<h2>' . $vehicule[0]['vehicule_name'] . '</h2>';
         echo '<img class="card-img-top w-25" src="../client/img/vehicules/' . $vehicule[0]['image_paths'][0]['chemin'] . '" alt="' . $vehicule[0]['vehicule_name'] . '">';
+        ?>
+                 <button id="btn_img"  onclick="updateImage()" class="btn btn-primary" style="width:150px;border:none;background-color:#F41F11">Modifier la photo</button>
+
+               <form enctype="multipart/form-data" method="POST" id="formImg" action="./index.php?action=editVehiculeImage" style="display:none;">
+                <div style="display: flex; justify-content: start; align-items: center; gap: 50px;">
+                  <div style="border-radius: 7px; font-size: 20px; font-weight: 300; width:250px;height:50px; outline: none; background: white; color: black; border: 1px solid #F41F11; position: relative;">
+                  <input  name="idVimg" id="idVimg" style="display:none" value="<?php echo $vehicule[0]['vehicule_id']?>">
+                   <input type="file" name="photo" id="imageV" style="position: absolute;left: -9999px;" required accept="image/*">
+                    <label for="imageV" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: pointer;">Selectioner une image</label>
+                  </div>
+                </div>
+                <button   type="submit" class="btn btn-primary" style="margin-top:20px;width:100px;border:none;background-color:#F41F11">Modifier</button>
+                <form>
+                <?php
         echo '</div>';
         echo '<div style="width: 80%; margin: 10px auto; display: flex;flex-direction:column; justify-content: space-evenly;">';
         ?>
@@ -49,6 +122,11 @@ class GestionVehicules{
         <h3>Année :  </h3>
           <input id="anneeV" style="border-radius:7px;font-size:20px;font-weight:300;width:40%;outline:none;background:white;color:black;border:none" disabled value="<?php echo $vehicule[0]['vehicule_annee'] ?>"  >
         </div>
+        <div id="imgContainer" style="display:none">
+
+        
+
+     </div>
         <button id="btn_vehicule" onclick="updateVehicule(<?php echo $vehicule[0]['vehicule_id']?>)" type="button" class="btn btn-primary" style="width:150px;border:none;background-color:#F41F11">Modifier</button>
 
         <?php
@@ -82,28 +160,49 @@ class GestionVehicules{
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" style="border:none;background-color:#F41F11" data-bs-dismiss="modal">Non</button>
         <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=deleteVehicule&id=<?php echo $vehicule[0]['vehicule_id']?>">Oui</a>      </div>
-    </div>
-  </div>
-</div>
+      </div>
+     </div>
+     </div>
         <?php
         echo '</div>';
 
         ?>
         <script>
+            function updateImage(){
+                var btn=$('#btn_img');
+                var form=$('#formImg'); 
+                if (btn.text()=== 'Modifier la photo') {
+                btn.text('Fermer');
+                
+                form.css("display", "block");
+
+            }else {
+                btn.text('Modifier la photo');
+                
+                form.css("display", "none");
+            }
+
+            }
         function updateVehicule(idVehicule){
             var typeInput=$('#typeV');
             var anneeInput=$('#anneeV');
+            //var imageInput=$('#imageV');
+            //var imageContainer=$("#imgContainer");
             var btn=$('#btn_vehicule');
             if (btn.text()=== 'Modifier') {
                 btn.text('Submit');
                 typeInput.prop('disabled', false).css('border', '1px solid #F41F11');
                 anneeInput.prop('disabled', false).css('border', '1px solid #F41F11');
+                //imageContainer.css("display", "block");
 
             } else {
                 typeInput.prop('disabled', true).css('border', 'none');
                 anneeInput.prop('disabled', true).css('border', 'none');
+                //imageContainer.css("display", "none");
                 type=typeInput.val();
                 annee=anneeInput.val();
+                //image=imageInput.val().split('\\').pop();;
+                //console.log(image);
                 $.ajax({
             type: "POST",
             url: "./model/vehicule.php",
@@ -161,32 +260,24 @@ class GestionVehicules{
         
         <?php
 
-    }
+}
     
     public function addVehicule($marques,$caracteristics)
 {
-        ?>
+        ?><div style="display:flex;flex-direction:column;justify-content:space-between;align-items:center">
+        <h1>Ajouter un vehicule</h1>
         <form enctype="multipart/form-data" method="POST" id="form" action="./index.php?action=addVehicule" style="width:800px;display:flex;flex-direction:column;align-items:center;gap:15px">
-            <!-- Marque Dropdown 54-->
             <label for="marque">Marque</label>
-            <select name="marque" id="marque" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateModeles(this)" required>
+            <select name="marque" id="marque" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"  required>
                     <option value="">Marque</option>
                     <?php foreach ($marques as $marque) : ?>
                         <option value='<?php echo $marque['id']; ?>'><?php echo $marque['nom']; ?></option>
                     <?php endforeach; ?>
                 </select>
-
-                <!-- Modele Dropdown -->
                 <label for="modele">Modele</label>
-                <select name="modele" id="modele" class="modeleDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" onchange="updateVersions(this)" disabled required>
-                    <option value="">Modele</option>
-                </select>
-
-                <!-- Version Dropdown -->
+                <input name="modele" id="modele"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="version">Version</label>
-                <select name="version" id="version" class="versionDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"  disabled required>
-                    <option value="">Version</option>
-                </select>
+                <input name="version" id="version"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="annee">Année</label>
                 <input name="annee" id="annee"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="type">Type</label>
@@ -205,66 +296,63 @@ class GestionVehicules{
                 <button type="submit" style="width:150px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
 
         </form>
-        <script>
-
-
- function updateModeles(element) {
-    var container = $("#form");
-    var marqueId = $(element).val();
-    console.log(marqueId);
-    
-    var modeleDropdown = container.find('.modeleDropdown');
-    
-    $.ajax({
-        type: "POST",
-        url: "./model/modele.php",
-        data: { marqueId: marqueId },
-        dataType: "json",
-        success: function (data) {
-            console.log("success");
-            modeleDropdown.empty();
-            modeleDropdown.append('<option value="">Modele</option>');
-            $.each(data, function (index, modele) {
-                modeleDropdown.append($("<option>").attr("value", modele.id).text(modele.nom));
-            });
-            modeleDropdown.prop("disabled", false);
-        },
-        error: function (xhr, status, error) {
-            console.log("failed");
-            console.error("AJAX Error:", status, error);
-        }
-    });
- }
-
-  function updateVersions(element) {
-    var container = $("#form");
-    var modeleId = $(element).val();
-    console.log(modeleId);
-
-    var versionDropdown = container.find('.versionDropdown');
-    
-    $.ajax({
-        type: "POST",
-        url: "./model/version.php",
-        data: { modeleId: modeleId },
-        dataType: "json",
-        success: function (data) {
-            versionDropdown.empty();
-            versionDropdown.append('<option value="">Version</option>');
-            $.each(data, function (index, version) {
-                versionDropdown.append($("<option>").attr("value", version.id).text(version.nom));
-            });
-            versionDropdown.prop("disabled", false);
-        },
-        error: function (xhr, status, error) {
-            console.log("failed");
-            console.error("AJAX Error:", status, error);
-        }
-    });
-  }
-
-   </script>
+                </div>
         <?php
 }
+   public function deleteCarac($caracs){
+    ?>
+    <form method="POST"  action="./index.php?action=deleteCarac" style="width:800px;display:flex;justify-content:center;align-items:center">
+    <label for="carac">Selectioner la caracteristique à supprimer</label>
+            <select name="carac" id="carac" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"  required>
+                    <option value="">Caracteristique</option>
+                    <?php foreach ($caracs as $carac) : ?>
+                        <option value='<?php echo $carac['id']; ?>'><?php echo $carac['nom']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit" style="width:150px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Supprimer</button>
+         
+    </form>
+    <?php
+   }
+   public function addCarac(){
+    ?>
+    <form method="POST" id="form" action="./index.php?action=addCarac" style="width:800px;display:flex;flex-direction:column;align-items:center;">
+        <div id="caracContainer">
+            <label for="carac1">Caracteristique 1 :</label>
+            <input name="carac[]" id="carac1" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+        </div>
+        <button type="button" id="more" style="width:100px;height:30px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;margin-top:10px;">Plus</button>
+        <button type="button" id="less" style="width:100px;height:30px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;margin-top:10px;">Moins</button>
+        <button type="submit" style="width:100px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;margin-top:10px;">Ajouter</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var caracCount = 1;
+
+            $("#more").click(function () {
+                caracCount++;
+                var newCaracInput = '<div id="caracContainer' + caracCount + '" style="margin-top:10px;">' +
+                    '<label for="carac' + caracCount + '">Caracteristique ' + caracCount + ' :</label>' +
+                    '<input name="carac[]" id="carac' + caracCount + '" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>' +
+                    '</div>';
+                $("#caracContainer").append(newCaracInput);
+            });
+
+            $("#less").click(function () {
+                if (caracCount > 1) {
+                    $("#caracContainer" + caracCount).remove();
+                    caracCount--;
+                }
+            });
+        });
+    </script>
+    <?php
+}
+
+
+
+
 }
 ?>

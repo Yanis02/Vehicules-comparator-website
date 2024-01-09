@@ -22,7 +22,17 @@ switch ($action) {
              break; 
              case "deleteVehicule": 
                 $vehiculeController->deleteVehicule();
-                 break;    
+                 break; 
+
+                 case "editVehiculeImage": 
+                    $vehiculeController->updateVehiculeImage();
+                     break; 
+                     case  "ajouterCarac":
+                        $vehiculeController->showAddCarForm();
+                     break; 
+                        
+                 
+                 
     
     }
 

@@ -22,6 +22,19 @@ public function addImage($vehiculeId, $chemin) {
 
     
 }
+public function updateImage($vehiculeId, $chemin){
+    $conn = $this->db->connectDb();
+
+    
+        $query = "UPDATE  imagesvehicules SET  chemin='$chemin' WHERE idVehicule=$vehiculeId";
+
+        $this->db->request($conn, $query);
+
+
+        $this->db->disconnectDb($conn);
+
+    
+}
 
 
 }

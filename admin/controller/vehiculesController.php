@@ -16,7 +16,7 @@ class vehiculesController{
         $vehiculeModel=new VehiculeModel();
         $vehicules=$vehiculeModel->getAllVehicules();
         $gestionVehicules=new GestionVehicules();
-        $gestionVehicules->displayTable($vehicules);
+        $gestionVehicules->generateDataTable($vehicules);
         #print_r($vehicules);
     }
     public function showVehiculeDetails(){
@@ -33,6 +33,9 @@ class vehiculesController{
          $caracs=$caracModel->getCarac();
         $this->gestionVehiculeView->addVehicule($marques,$caracs);
     }
+    public function showAddCarForm(){
+        $this->gestionVehiculeView->addCarac();
+    }
     public function addVehicule(){
         $caracModel=new CaracModel();
         $vehiculeModel=new VehiculeModel();
@@ -41,18 +44,20 @@ class vehiculesController{
         if($_SERVER["REQUEST_METHOD"]=="POST"){
            
             $vehiculeFeatures =[];
-            $versionId=$_POST["version"];
             $type=$_POST["type"];
             $annee=$_POST["annee"];
+            $modele=$_POST["modele"];
+            $version=$_POST["version"];
+            $marque=$_POST["marque"];
             foreach ($_POST as $key => $value) {
                 if (strpos($key, 'car_') === 0) {
                     $featureId = substr($key, 4); 
                     $vehiculeFeatures[$featureId] = $value;
                 }
             }
-           $lastId=$vehiculeModel->addVehicule($versionId,$annee,$type);
-           
+           $lastId=$vehiculeModel->addVehicule($marque,$modele,$version,$annee,$type);
            if($lastId!=false){
+            
             foreach ($vehiculeFeatures as $featureId => $value) {
                 $caracModel->insertVehiculeCaracteristique($lastId,$featureId,$value);
             }
@@ -71,6 +76,8 @@ class vehiculesController{
            }
            
         } 
+        header("Location: ./index.php?action=home");
+
     }  
     public function deleteVehicule(){
         if (isset($_GET['id'])) {
@@ -78,6 +85,29 @@ class vehiculesController{
             $vehiculeModel=new VehiculeModel();
             $vehiculeModel->deleteVehicule($id);
         }
-    }      
+    } 
+    public function updateVehiculeImage(){
+        $imageModel=new ImageModel();
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+           
+            $id=$_POST["idVimg"];
+            if (isset($_FILES['photo'])) {
+                $uploadDir = '../client/img/vehicules/';
+                $uploadFile = $uploadDir . basename($_FILES['photo']['name']);
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploadFile)) {
+                    echo 'File has been uploaded successfully.';
+                    $imageModel->updateImage($id,basename($_FILES['photo']['name']));
+                    header("Location: ./index.php?action=detailVehicule&idVehicule=".$id);
+                } else {
+                    echo 'Error uploading the file.';
+                }
+            } else {
+                echo 'Invalid file upload.';
+            }
+           }
+           
+        } 
+    
+         
 }
 ?>

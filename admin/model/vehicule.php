@@ -178,7 +178,7 @@ public function updateVehicule($id,$type,$annee){
     echo json_encode($result); 
 
 }
-public function addVehicule($versionId, $annee, $type) {
+public function addVehicul($versionId, $annee, $type) {
     $conn = $this->db->connectDb();
 
     $existingVehicleId = $this->getExistingVehicleId($versionId, $annee, $type);
@@ -214,6 +214,94 @@ public function deleteVehicule($id){
         $db->request($conn, $query);
         $db->disconnectDb($conn);
 }
+
+
+
+
+public function addVehicule($marqueId, $modeleName, $versionName, $annee, $type) {
+    $conn = $this->db->connectDb();
+
+    $modeleId = $this->getOrCreateModele($marqueId,$modeleName);
+
+    $versionId = $this->getOrCreateVersion($versionName, $modeleId);
+
+    $existingVehicleId = $this->getExistingVehicleId($versionId, $annee, $type);
+
+    if ($existingVehicleId) {
+        return false;
+    } else {
+        $query = "INSERT INTO vehicule (idVersion, annee, type) VALUES ($versionId, $annee, '$type')";
+        $this->db->request($conn, $query);
+
+        $newVehicleId = $conn->lastInsertId();
+
+
+        $this->db->disconnectDb($conn);
+
+        return $newVehicleId;
+    }
+}
+
+private function getOrCreateModele($marqueId, $modeleName) {
+    $conn = $this->db->connectDb();
+
+    $query = "SELECT id FROM modele WHERE nom = '$modeleName' AND idMarque = $marqueId";
+    $result = $this->db->request($conn, $query);
+
+    if ($result) {
+        return $result[0]['id'];
+    }
+
+    $query = "INSERT INTO modele (nom, idMarque) VALUES ('$modeleName', $marqueId)";
+    $this->db->request($conn, $query);
+
+    return $conn->lastInsertId();
+}
+
+private function getOrCreateVersion($versionName, $modeleId) {
+    $conn = $this->db->connectDb();
+
+    $versionId = $this->getVersionIdByNameAndModele($versionName, $modeleId);
+
+    if ($versionId) {
+        return $versionId;
+    } else {
+        $query = "INSERT INTO version (nom, idModele) VALUES ('$versionName', $modeleId)";
+        $this->db->request($conn, $query);
+
+        return $conn->lastInsertId();
+    }
+}
+
+private function getModeleIdByName($modeleName) {
+    $conn = $this->db->connectDb();
+
+    $query = "SELECT id FROM modele WHERE nom = '$modeleName'";
+    $result = $this->db->request($conn, $query);
+
+    if ($result && $row = $result->fetch(PDO::FETCH_ASSOC)) {
+        return $row['id'];
+    }
+
+    return null; 
+}
+
+private function getVersionIdByNameAndModele($versionName, $modeleId) {
+    $conn = $this->db->connectDb();
+
+    $query = "SELECT id FROM version WHERE nom = '$versionName' AND idModele = $modeleId";
+    $result = $this->db->request($conn, $query);
+
+    if ($result) {
+        return $result[0]['id'];
+    }
+
+    return null; 
+}
+
+
+
+
 
    
 }
