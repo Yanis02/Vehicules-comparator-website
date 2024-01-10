@@ -55,10 +55,14 @@ class AuthController{
             $user = $userModel->auth($username, $password);
             if ($user) {
                 if($user["valide"]==1){
-                    echo "Logged in";
+                    if ($user["bloque"]==0) {
+                        # code...
+                        echo "Logged in";
                         session_start();
                 $_SESSION['user'] = $user;
                 header("Location: ./index.php?action=home");
+                    }else echo "VOUS ETES BLOQUE";
+                   
                 } else {
                     
                     $text="Registration is waiting to be approuved!";

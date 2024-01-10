@@ -12,11 +12,10 @@ class vehiculesController{
     public function __construct() {
         $this->gestionVehiculeView = new GestionVehicules();
     }
-    public function showVehiculesTable(){
-        $vehiculeModel=new VehiculeModel();
-        $vehicules=$vehiculeModel->getAllVehicules();
+    public function showVehiculesTable($vehicules,$id){
+        
         $gestionVehicules=new GestionVehicules();
-        $gestionVehicules->generateDataTable($vehicules);
+        $gestionVehicules->generateDataTable($vehicules,$id);
         #print_r($vehicules);
     }
     public function showVehiculeDetails(){
@@ -27,11 +26,13 @@ class vehiculesController{
                 $this->gestionVehiculeView->vehiculeDetails($vehicule);
             }}
     public function showVehiculeForm(){
-         $marqueModel=new MarqueModel();
-         $marques=$marqueModel->getAllMarques();
          $caracModel=new CaracModel();
          $caracs=$caracModel->getCarac();
-        $this->gestionVehiculeView->addVehicule($marques,$caracs);
+         if(isset($_GET["idMarque"])){
+          $id=$_GET["idMarque"];
+        
+        $this->gestionVehiculeView->addVehicule($id,$caracs);
+    }
     }
     public function showAddCarForm(){
         $this->gestionVehiculeView->addCarac();
@@ -62,10 +63,11 @@ class vehiculesController{
                 $caracModel->insertVehiculeCaracteristique($lastId,$featureId,$value);
             }
             if (isset($_FILES['photo'])) {
+                echo "hii";
                 $uploadDir = '../client/img/vehicules/';
                 $uploadFile = $uploadDir . basename($_FILES['photo']['name']);
                 if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploadFile)) {
-                    #echo 'File has been uploaded successfully.';
+                    echo 'File has been uploaded successfully.';
                     $imageModel->addImage($lastId,basename($_FILES['photo']['name']));
                 } else {
                     echo 'Error uploading the file.';
@@ -76,7 +78,7 @@ class vehiculesController{
            }
            
         } 
-        header("Location: ./index.php?action=home");
+        header("Location: ./index.php?action=marques");
 
     }  
     public function deleteVehicule(){
@@ -84,6 +86,8 @@ class vehiculesController{
             $id=$_GET['id'];
             $vehiculeModel=new VehiculeModel();
             $vehiculeModel->deleteVehicule($id);
+            header("Location: ./index.php?action=marques");
+
         }
     } 
     public function updateVehiculeImage(){

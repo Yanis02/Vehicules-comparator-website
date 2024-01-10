@@ -34,7 +34,7 @@ class GestionVehicules{
 
     }
 
-    function generateDataTable($vehicules)
+    function generateDataTable($vehicules,$idMarque)
     {   
         echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
         echo '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>';
@@ -83,7 +83,7 @@ class GestionVehicules{
         }
     
         echo '</tbody></table>';
-        echo '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterVehicule">Ajouter un vehicule</a>
+        echo '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterVehicule&idMarque=' . $idMarque . '">Ajouter un vehicule</a>
         <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterCarac">Ajouter une caracteristique</a>
         <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=supprimerCarac">Supprimer une caracteristique</a>
         
@@ -262,24 +262,20 @@ class GestionVehicules{
 
 }
     
-    public function addVehicule($marques,$caracteristics)
+    public function addVehicule($idMarque,$caracteristics)
 {
         ?><div style="display:flex;flex-direction:column;justify-content:space-between;align-items:center">
         <h1>Ajouter un vehicule</h1>
         <form enctype="multipart/form-data" method="POST" id="form" action="./index.php?action=addVehicule" style="width:800px;display:flex;flex-direction:column;align-items:center;gap:15px">
-            <label for="marque">Marque</label>
-            <select name="marque" id="marque" class="marqueDropdown" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;"  required>
-                    <option value="">Marque</option>
-                    <?php foreach ($marques as $marque) : ?>
-                        <option value='<?php echo $marque['id']; ?>'><?php echo $marque['nom']; ?></option>
-                    <?php endforeach; ?>
-                </select>
+        <input type="hidden" name="marque" value="<?php echo $idMarque ?>">
+                    
+                
                 <label for="modele">Modele</label>
                 <input name="modele" id="modele"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="version">Version</label>
                 <input name="version" id="version"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="annee">Année</label>
-                <input name="annee" id="annee"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+                <input name="annee" id="annee" type="number"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                 <label for="type">Type</label>
                 <input name="type" id="type"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
                  <?php
@@ -287,13 +283,20 @@ class GestionVehicules{
                     ?>
                     <label for="car_<?php echo $caracteristic["id"]?>"><?php echo $caracteristic["nom"]?></label>
                     <input name="car_<?php echo $caracteristic["id"]?>" id="car_<?php echo $caracteristic["id"]?>"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
-
+                  
                     <?php
                  }
                  ?>
-                 <label for="photo">Photo</label>
-                <input name="photo" id="photo" type="file"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required accept="image/*">
+               <label for="photo">photo</label>
+                <div style="border-radius: 7px; font-size: 20px; font-weight: 300; width:70%;height:50px; outline: none; background: white; color: black; border: 2px solid; position: relative;">
+                   <input type="file" name="photo" id="photo" style="position: absolute;left: -9999px;" required accept="image/*">
+                    <label for="photo" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: pointer;">Selectioner une image</label>
+                  </div>
                 <button type="submit" style="width:150px;height:40px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Ajouter</button>
+
+
+               
+
 
         </form>
                 </div>

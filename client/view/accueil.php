@@ -150,7 +150,7 @@ public function marquesSection($marques)
                             <?php
                             for ($j = $i * 3; $j < min(($i + 1) * 3, count($marques)); $j++) :
                             ?>
-                             <a href="./index.php?action=marques&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>.png" alt="..." style="width:200px; height:auto;"></a>
+                             <a href="./index.php?action=marques&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>" alt="..." style="width:200px; height:auto;"></a>
                             <?php endfor; ?>
                         </div>
                     </div>

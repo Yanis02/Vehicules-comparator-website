@@ -16,7 +16,7 @@ class Marques{
                                 ?>
                                 <div style="height:400px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;">
                                 <div style="height:300px;display:flex;justify-content:center;align-items:center;">
-                                 <a href="<?php if ($type==="avis") echo "./index.php?action=avis";else echo "./index.php?action=marques";?>&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>.png" alt="..." style="width:300px; height:auto;"></a>
+                                 <a href="<?php if ($type==="avis") echo "./index.php?action=avis";else echo "./index.php?action=marques";?>&id=<?php echo $marques[$j]['id'] ?>">   <img src="./img/marques/<?php echo $marques[$j]['images'][0] ?? ''; ?>" alt="..." style="width:300px; height:auto;"></a>
                                  </div>
                                  <p style="font-size:40px;"> <?php echo $marques[$j]["nom"] ?></p>
                                 </div>

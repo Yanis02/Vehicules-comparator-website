@@ -30,5 +30,23 @@ public function footer (){
     </html>
     <?php
 }
+public function displayCard($imageSrc, $cardTitle, $buttonText, $id) {
+    $card = '<div class="card" style="width: 18rem;">';
+    
+    $cardImage = '<img class="card-img-top" src="' . $imageSrc . '" alt="Card Image">';
+
+    $cardBody = '<div class="card-body">';
+
+    $cardTitleElement = '<h5 class="card-title">' . $cardTitle . '</h5>';
+
+    $button = '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=detailVehicule&idVehicule=' . $id . '">' . $buttonText . '</a>';
+
+    $cardBody .= $cardTitleElement . $button;
+
+    $card .= $cardImage . $cardBody . '</div></div>';
+
+    // Output the card
+    echo $card;
+}
 }
 ?>

@@ -12,7 +12,7 @@ class AppreciationController{
                     $avisModel=new AvisVehiculeModel();
                     $result=$avisModel->addAppreciation($idUser,$idAvis);
                     if ($result) {
-                        header("Location: ./index.php?action=avisVehicule&idVehicule=" . $idVehicule);
+                        header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
                     } else {
                         echo "Add appreciation failed failed. Please try again.";
                         
@@ -32,7 +32,7 @@ class AppreciationController{
                     $idVehicule=$_GET["idVehicule"];
                     $avisModel=new AvisVehiculeModel();
                     $result=$avisModel->deleteAppreciation($idUser,$idAvis);
-                        header("Location: ./index.php?action=avisVehicule&idVehicule=" . $idVehicule);
+                        header("Location: ./index.php?action=detailVehicule&idVehicule=" . $idVehicule);
                         
                     }
                 } else echo "user not found";
