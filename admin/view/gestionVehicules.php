@@ -37,7 +37,6 @@ class GestionVehicules{
     function generateDataTable($vehicules,$idMarque)
     {   
         echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
-        echo '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>';
         echo '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>';
         echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>';
     
@@ -84,8 +83,7 @@ class GestionVehicules{
     
         echo '</tbody></table>';
         echo '<a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterVehicule&idMarque=' . $idMarque . '">Ajouter un vehicule</a>
-        <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=ajouterCarac">Ajouter une caracteristique</a>
-        <a class="btn btn-primary" style="border:none;background-color:#F41F11" href="./index.php?action=supprimerCarac">Supprimer une caracteristique</a>
+       
         
         </div>';
         
@@ -151,7 +149,7 @@ class GestionVehicules{
       <div class="modal-dialog">
       <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Message</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">

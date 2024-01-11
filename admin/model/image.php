@@ -20,6 +20,17 @@ public function addImage($vehiculeId, $chemin) {
 
     
 }  
+public function addImageNews($id, $chemin) {
+    $conn = $this->db->connectDb();
+
+
+        $query = "INSERT INTO imagesnews (idNews, chemin) VALUES ($id,'$chemin')";
+        $this->db->request($conn, $query);
+        
+        $this->db->disconnectDb($conn);
+
+    
+}  
 public function addImageMarque($chemin){
     $conn = $this->db->connectDb();
     $check="SELECT id FROM images WHERE chemin= '$chemin';";
@@ -49,7 +60,12 @@ public function updateImage($vehiculeId, $chemin){
 
     
 }
-
+public function updateImageNews($id,$chemin){
+    $conn = $this->db->connectDb();
+    $query = "UPDATE  imagesnews SET  chemin='$chemin' WHERE idNews=$id";
+    $this->db->request($conn, $query);
+    $this->db->disconnectDb($conn);
+}
 public function updateImageMarque($chemin,$newChemin){
     $conn = $this->db->connectDb();
     $query = "UPDATE  images SET  chemin='$newChemin' WHERE chemin='$chemin'";

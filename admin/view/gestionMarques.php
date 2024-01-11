@@ -68,7 +68,7 @@ class GestionMarques{
                 <div style="display: flex; justify-content: start; align-items: center; gap: 50px;">
                   <div style="border-radius: 7px; font-size: 20px; font-weight: 300; width:250px;height:50px; outline: none; background: white; color: black; border: 1px solid #F41F11; position: relative;">
                   <input  name="idVimg" id="idVimg" style="display:none" value="<?php echo $marque[0]['images'][0]?>">
-                  <input  name="idMimg" id="idVimg" style="display:none" value="<?php echo $marque[0]['id'][0]?>">
+                  <input  name="idMimg" id="idVimg" style="display:none" value="<?php echo $marque[0]['id']?>">
                    <input type="file" name="photo" id="imageV" style="position: absolute;left: -9999px;" required accept="image/*">
                     <label for="imageV" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; cursor: pointer;">Selectioner une image</label>
                   </div>
@@ -125,6 +125,7 @@ class GestionMarques{
         echo '</div>';
 
         ?>
+
         <script>
          function updateImage(){
                 var btn=$('#btn_img');

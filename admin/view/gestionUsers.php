@@ -29,7 +29,7 @@ class GestionUsers{
         </script>';
     
         echo '<div class="container mt-4">
-             <h1>Gestion des avis utilisateurs</h1>
+             <h1>Gestion des utilisateurs</h1>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr><th scope="col">Utilisateur</th>

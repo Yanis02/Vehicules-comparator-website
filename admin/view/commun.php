@@ -48,5 +48,58 @@ public function displayCard($imageSrc, $cardTitle, $buttonText, $id) {
     // Output the card
     echo $card;
 }
+public function navBar()
+{
+    $currentAction = isset($_GET['action']) ? $_GET['action'] : '';
+
+    ?>
+    <div style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100px; border-bottom: solid 2px #F41F11; margin-bottom:60px; position: sticky; top: 0; background-color: #fff; z-index: 1000;">
+        <ul style="width: 90%; display: flex; flex-direction: row; justify-content: space-around; align-items: center; list-style: none; font-size: 20px;">
+            <li><a href="./index.php?action=home" style="text-decoration: none; color: <?= $currentAction === 'home' ? 'red' : '#000'; ?>">Accueil</a></li>
+            <li><a href="./index.php?action=marques" style="text-decoration: none; color: <?= $currentAction === 'marques' ? 'red' : '#000'; ?>">Marques & vehicules</a></li>
+            <li><a href="./index.php?action=avisMarques" style="text-decoration: none; color: <?= $currentAction === 'avisMarques' ? 'red' : '#000'; ?>">Avis marques</a></li>
+            <li><a href="./index.php?action=avis" style="text-decoration: none; color: <?= $currentAction === 'avis' ? 'red' : '#000'; ?>">Avis vehicules</a></li>
+            <li><a href="./index.php?action=users" style="text-decoration: none; color: <?= $currentAction === 'users' ? 'red' : '#000'; ?>">Utilisateurs</a></li>
+            <li><a href="./index.php?action=news" style="text-decoration: none; color: <?= $currentAction === 'news' ? 'red' : '#000'; ?>">News</a></li>
+            <li><a href="./index.php?action=parametres" style="text-decoration: none; color: <?= $currentAction === 'parametres' ? 'red' : '#000'; ?>">Parametres</a></li>
+        </ul>
+    </div>
+    <?php
+}
+
+public function dashBoard(){
+    ?>
+    <div style="display:flex;justify-content:center;align-items:center;width:100%;flex-direction:column;">
+    <h1>Admin dashboard</h1>
+    <div style="flex-wrap:wrap;width:80%;height:700px;display:flex;align-items:center;border:solid 2px #F41F11;border-radius:10px;justify-content:space-evenly;padding:20px;">
+           <a href="./index.php?action=marques" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/gestionMv.png">
+              <h5>Gestion des marques et des vehicules</h5>
+          </div></a>
+          <a href="./index.php?action=avisMarques" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/gestionAvis.png">
+              <h5>Gestion des Avis marques</h5>
+          </div></a>
+          <a href="./index.php?action=avis" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/gestionAvis.png">
+              <h5>Gestion des Avis vehicules</h5>
+          </div></a>
+          <a href="./index.php?action=users" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/gestionUser.png">
+              <h5>Gestion des utilisateurs</h5>
+          </div></a>
+          <a href="./index.php?action=news" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/gestionNews.png">
+              <h5>Gestion des news</h5>
+          </div></a>
+          <a href="./index.php?action=parametres" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/settings.png">
+              <h5>Parametres</h5>
+          </div></a>
+          
+   </div>
+</div>
+    <?php
+}
 }
 ?>
