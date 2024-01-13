@@ -6,7 +6,7 @@ class News{
         $db = new database();
         $conn = $db->connectDb();
 
-        $query = "SELECT n.id, n.title, n.description, n.details, i.chemin as image_path
+        $query = "SELECT n.id, n.title, n.description, n.details,n.affiche, i.chemin as image_path
                   FROM news n
                   LEFT JOIN imagesnews i ON n.id = i.idNews";
 
@@ -22,6 +22,7 @@ class News{
                     'title' => $item['title'],
                     'description' => $item['description'],
                     'details' => $item['details'],
+                    "affiche"=>$item["affiche"],
                     'images' => array()
                 );
             }
@@ -32,6 +33,24 @@ class News{
         }
 
         return array_values($result); 
+    }
+    public function afficher($id){
+        $db = new Database();
+        $conn = $db->connectDb();
+        $query = "UPDATE news SET affiche=1 WHERE id=$id";
+        $db->request($conn, $query);
+        $db->disconnectDb($conn);
+
+
+    }
+    public function cacher($id){
+        $db = new Database();
+        $conn = $db->connectDb();
+        $query = "UPDATE news SET affiche=0 WHERE id=$id";
+        $db->request($conn, $query);
+        $db->disconnectDb($conn);
+
+
     }
     public function getNewsbyId($id){
         $db = new database();

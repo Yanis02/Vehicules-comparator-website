@@ -62,6 +62,8 @@ public function navBar()
             <li><a href="./index.php?action=users" style="text-decoration: none; color: <?= $currentAction === 'users' ? 'red' : '#000'; ?>">Utilisateurs</a></li>
             <li><a href="./index.php?action=news" style="text-decoration: none; color: <?= $currentAction === 'news' ? 'red' : '#000'; ?>">News</a></li>
             <li><a href="./index.php?action=parametres" style="text-decoration: none; color: <?= $currentAction === 'parametres' ? 'red' : '#000'; ?>">Parametres</a></li>
+            <li><a href="./index.php?action=logout" style="text-decoration: none; color: <?= $currentAction === 'logout' ? 'red' : '#000'; ?>">logout</a></li>
+
         </ul>
     </div>
     <?php
@@ -99,6 +101,93 @@ public function dashBoard(){
           
    </div>
 </div>
+    <?php
+}
+
+
+public function parametres(){
+    ?>
+    <div style="display:flex;justify-content:center;align-items:center;width:100%;flex-direction:column;">
+    <h1>Gestion des parametres</h1>
+    <div style="flex-wrap:wrap;width:80%;height:700px;display:flex;align-items:center;border:solid 2px #F41F11;border-radius:10px;justify-content:space-evenly;padding:20px;">
+           <a href="./index.php?action=contact" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/contact.png">
+              <h5>Gestion de contact</h5>
+          </div></a>
+          <a href="./index.php?action=diaporama" style="text-decoration:none;color:black"><div style="width:250px;height:320px;display:flex;flex-direction:column;gap:10px;border:solid 2px #F41F11;border-radius:5px;padding:10px">
+              <img style="width:100%;object:cover;" src="./assets/diaporama.png">
+              <h5>Gestion de diaporama</h5>
+          </div></a>
+          
+          
+   </div>
+</div>
+    <?php
+}
+
+public function login(){
+    ?>
+    
+    <div style="display:flex;justify-content:center;align-items:center;width:100%;height:100vh;" >
+      <form method="post" action="./index.php?action=loginHandler" style="padding:10px;width: 700px; height: 500px; border: 2px solid #F41F11; border-radius: 10px;display:flex;flex-direction:column;justify-content:space-around;align-items:center" >
+        <h1>Connectez-vous :</h1>
+        <label for="username" style="margin-right:50%;">Nom utilisateur :</label>
+        <input name="username" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+        <label for="password" style="margin-right:50%;">Mot de passe :</label>
+        <input name="password" type="password" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required>
+        <button type="submit" style="width:150px;height:50px;color:white;text-align:center;background-color:#F41F11;border-radius:10px;border:none;font-size:20px;">Se connecter</button>
+     </form>
+    </div>
+    <?php
+}
+public function waitingApprouval($text,$type){
+    ?>
+    <!-- Button trigger modal -->
+ <button id="btn" style="display:none" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+ </button>
+
+ <!-- Modal -->
+ <div class="modal fade " id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <?php echo $text ; ?>      </div>
+      <div class="modal-footer">
+        <button id="close" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background:#F41F11">Fermer</button>
+      </div>
+    </div>
+  </div>
+ </div>
+    <script>
+ $(document).ready(function() {
+        $("#btn").click();
+        $("#close").click(function() {
+            <?php
+            if($type=="vehicule"){
+                ?>
+          window.location.href = `./index.php?action=home`;
+
+                <?php
+            }else if($type=="register"){
+                ?>
+                window.location.href = `./index.php?action=home`;
+      
+                      <?php
+            }else if($type=="login"){
+                ?>
+                window.location.href = `./index.php?action=auth`;
+      
+                      <?php
+            } 
+                ?>
+    });
+    });
+    </script>
     <?php
 }
 }

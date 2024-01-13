@@ -17,6 +17,11 @@ class NewsController{
         $news=$newsModel->getAllNews();
         $this->gestionNewsView->generateDataTable($news);
     }
+    public function showPubTableD(){
+        $newsModel=new News();
+        $pubs=$newsModel->getAllNews();
+        $this->gestionNewsView->generateDataTableDiaporama($pubs);
+    }
     public function showNewsDetails(){
         if (isset($_GET['idNews'])) {
                 $id = $_GET['idNews'];
@@ -94,6 +99,27 @@ class NewsController{
                                 } 
                                 header("Location: ./index.php?action=news");
                         
-                            }                         
+                            }     
+                            
+                            public function afficherNews(){
+                                if (isset($_GET['id'])) {
+                                    $id=$_GET['id'];
+                                    $newsModel=new News();
+                                    $newsModel->afficher($id);
+                                    header("Location: ./index.php?action=diaporama");
+                        
+                                }
+
+                            }
+                            public function cacherNews(){
+                                if (isset($_GET['id'])) {
+                                    $id=$_GET['id'];
+                                    $newsModel=new News();
+                                    $newsModel->cacher($id);
+                                    header("Location: ./index.php?action=diaporama");
+                        
+                                }
+
+                            }
 }
 ?>

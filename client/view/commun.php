@@ -177,5 +177,12 @@ public function displayCard($imageSrc, $cardTitle, $buttonText, $id) {
     // Output the card
     echo $card;
 }
+public function footer(){
+    ?>
+    <div style="margin-top:50px;width:100%;display:flex;justify-content:center;align-items:center;background:black;height:150px">
+<h5 style="color:red">&copy; 2024 AutoComp. All rights reserved</h5>  
+</div>
+    <?php
+}
 }
 ?>

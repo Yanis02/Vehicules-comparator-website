@@ -16,5 +16,13 @@ class layoutController{
     public function showNavBar(){
         $this->communView->navBar();
     }
+public function showParametres(){
+    $this->communView->parametres();
+
+}
+public function showAuthFrom(){
+    $this->communView->login();
+
+}
 }
 ?>

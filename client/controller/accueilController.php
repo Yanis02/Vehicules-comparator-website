@@ -1,5 +1,7 @@
 <?php
 require_once("./model/news.php");
+require_once("./model/publicite.php");
+
 require_once("./model/marque.php");
 require_once("./view/accueil.php");
 require_once("./view/commun.php");
@@ -44,9 +46,11 @@ class accueilController{
 {
 
         $newsModel=new newsModel();
-        $news=$newsModel->getAllNews();
+        $pubsModel=new Publicite();
+        $pubs=$pubsModel->getAllDisplayedPubs();
+        $news=$newsModel->getAllDisplayedNews();
         
-        $this->accuilModel->newsSection($news);
+        $this->accuilModel->newsSection($news,$pubs);
 }
 
     public function showCompPage(){

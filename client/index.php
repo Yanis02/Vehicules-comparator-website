@@ -10,6 +10,10 @@ require_once("./controller/favorisController.php");
 require_once("./controller/appreciationController.php");
 require_once("./controller/comparaisonController.php");
 require_once("./controller/profileController.php");
+require_once("./controller/contactController.php");
+require_once("./controller/communController.php");
+
+
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 
@@ -24,6 +28,10 @@ $favorisController=new FavorisController();
 $appreciationController=new AppreciationController();
 $comparaisonController=new ComparaisonController();
 $profileController=new ProfileController();
+$contactController=new ContactController();
+$communController=new communController();
+
+
 $controllerModel->showHead();
 $controllerModel->showHeader();
 
@@ -107,7 +115,18 @@ switch ($action) {
                                     case "profile" :
                                         $controllerModel->showNavbar();
                                         $profileController->showProfile();
-                                        break;                       
+                                        break;    
+                                        case "contact":
+                                            $controllerModel->showNavbar();
+
+                                            $contactController->showContactDetails();
+                                            break;
+                                            case "detailNews":
+                                                $controllerModel->showNavbar();
+
+                                                $newsController->showNewsDetails();
+                                                break;
+                                                               
 
     default:
         $controllerModel->displayNewsSection();
@@ -116,4 +135,5 @@ switch ($action) {
         $controllerModel->showCompPage(); 
         $controllerModel->showPopularComps();
 }
+   $communController->showFooter();
 ?>

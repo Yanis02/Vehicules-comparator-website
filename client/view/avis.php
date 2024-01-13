@@ -136,7 +136,7 @@ public function AvisPage($marque)
                 console.log(response);
                 response.forEach((element,index) => {
                     
-                        displayCard(`./img/vehicules/${element.image_paths[0].chemin}.jpg`,element.vehicule_name,"Voir avis",element.vehicule_id);
+                        displayCard(`./img/vehicules/${element.image_paths[0].chemin}`,element.vehicule_name,"Voir avis",element.vehicule_id);
                     
 
             });

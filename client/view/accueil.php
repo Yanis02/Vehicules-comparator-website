@@ -10,7 +10,7 @@ class accueil {
         $currentAction = isset($_GET['action']) ? $_GET['action'] : '';
     
         ?>
-        <div style="display: flex; justify-content: center; align-items: center;">
+    <div style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100px; border-bottom: solid 2px #F41F11; margin-bottom:60px; position: sticky; top: 0; background-color: #fff; z-index: 1000;">
     
             <div>
                 <ul style="display: flex; flex-direction: row; justify-content: center; align-items: center; list-style: none; gap: 150px; font-size: 20px;">
@@ -32,7 +32,7 @@ public function header(){
     ?>
     <header>
         <div class="header" style="overflow:visible">
-        <a href="./index.php?action=home"> <h1>Logo</h1></a>
+        <a href="./index.php?action=home"><img src="./img/assets/logo.png" style="width:200px;"></a>
         <div class="socialContainer">
            <a href="https://www.google.com/"> <img src="./img/assets/google.png"></img></a>
            <a href="https://www.facebook.com"><img src="./img/assets/facebook.png"></img></a>
@@ -94,13 +94,13 @@ public function head($title, $description)
     <?php
 }
 
-public function newsSection($news){
+public function newsSection($news,$pubs){
 
  ?>
 
     <div class="newsContainer" style="display:flex;flex-direction:column;align-items-center;width:100%;height: 400px;">
         <?php 
-        if(empty($news)){
+        if(empty($news) && empty($pubs)){
             ?>
         <p>Nothing to display</p>
         <?php
@@ -108,7 +108,7 @@ public function newsSection($news){
             $delay=0;
             foreach ($news as $singleNews) {
                 ?>
-                <div class="newsItem" style="animation-delay: <?php echo $delay; ?>s;">
+           <a href="./index.php?action=detailNews&id=<?php echo $singleNews["id"]?>"> <div class="newsItem" style="animation-delay: <?php echo $delay; ?>s;">
                     <div class="titleContainer"> 
                         <h2><?php echo $singleNews['title']; ?></h2>
                     </div>
@@ -125,7 +125,30 @@ public function newsSection($news){
                         }
                         ?>
                     </div>
-                </div>
+                </div></a>
+                <?php
+                $delay+=5;
+            }
+            foreach ($pubs as $singlePub) {
+                ?>
+              <a href="https://<?php echo $singlePub["lien"]?>">  <div class="newsItem" style="animation-delay: <?php echo $delay; ?>s;">
+                    <div class="titleContainer"> 
+                        <h2><?php echo $singlePub['titre']; ?></h2>
+                    </div>
+                    <div class="imageContainer">
+                        <?php 
+                        if (!empty($singlePub['images'])) {
+                            ?>
+                            <img src="./img/pubs/<?php echo $singlePub['images'][0]; ?>" alt="News Image">
+                            <?php
+                        } else {
+                            ?>
+                            <p>No image available</p>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div></a>
                 <?php
                 $delay+=5;
             }

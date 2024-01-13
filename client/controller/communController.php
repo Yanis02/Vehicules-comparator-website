@@ -7,7 +7,12 @@ class communController{
     }
     public function showSeparator(){
         
-        $this->marquesView->separator();
+        $this->communView->separator();
+    }
+    public function showFooter(){
+        $this->communView->footer();
+
+
     }
 }
 

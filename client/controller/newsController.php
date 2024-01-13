@@ -12,5 +12,14 @@ class NewsController{
             ##var_dump($news);
             $this->newsView->newsPage($news);
      }
+     public function showNewsDetails(){
+        if (isset($_GET["id"])) {
+            $id=$_GET["id"];
+            $newsModel=new newsModel();
+            $news=$newsModel->getNewsById($id);
+            $this->newsView->newsDetails($news);
+
+        }
+     }
 }
 ?>
