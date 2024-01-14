@@ -37,9 +37,10 @@ class VehiculeController{
         $comparateurView->comparaisonV($marques,$vehicule[0]["vehicule_id"],$vehicule[0]["marque_id"],$vehicule[0]["modele_id"],$vehicule[0]["version_id"]);
         $avisModele=new AvisVehiculeModel();
         $topAvis=$avisModele->getTopAvisVehicules($id);
-        if ($topAvis) {
-            $commun->separator();
+        $commun->separator();
             $commun->AvisText();
+        if ($topAvis) {
+            
             foreach ($topAvis as $avis) {
                 if(isset($_SESSION['user'])){
                     $idUser=$_SESSION['user']["id"];

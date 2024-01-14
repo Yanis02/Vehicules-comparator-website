@@ -36,7 +36,6 @@ public function header(){
         <div class="socialContainer">
            <a href="https://www.google.com/"> <img src="./img/assets/google.png"></img></a>
            <a href="https://www.facebook.com"><img src="./img/assets/facebook.png"></img></a>
-           <a href="https://www.twitter.com"><img src="./img/assets/twitter.png"></img></a>
            <?php
              if(isset($_SESSION['user']
              )){
@@ -138,7 +137,7 @@ public function newsSection($news,$pubs){
                             echo '<a style="text-decoration:none;color:white;background:black;" href="https://' . $pub["lien"] . '" target="blank" class="carousel-item active" data-bs-interval="2000">';
                             echo '<div style="display:flex;justify-content:between;align-items:center">';
 
-                            echo '<img src=./img/news/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<img src=./img/pubs/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
                             echo '<h1>' . $pub["titre"]. ' </h1>';
                             echo '</div>';
 
@@ -146,7 +145,7 @@ public function newsSection($news,$pubs){
                         } else {
                             echo '<a style="text-decoration:none;color:white;background:black;" href="https://' . $pub["lien"] . '" target="blank" class="carousel-item" data-bs-interval="2000">';
                             echo '<div style="display:flex;justify-content:between;align-items:center">';
-                            echo '<img src=./img/news/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<img src=./img/pubs/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
                             echo '<h1>' . $pub["titre"]. ' </h1>';
                             echo '</div>';
 

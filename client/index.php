@@ -126,6 +126,9 @@ switch ($action) {
 
                                                 $newsController->showNewsDetails();
                                                 break;
+                                                case "admin":
+                                                    header("Location: ../admin/index.php");
+                                                    break;
                                                                
 
     default:

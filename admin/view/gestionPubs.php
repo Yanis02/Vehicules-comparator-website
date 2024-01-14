@@ -75,7 +75,7 @@ class GestionPubs{
     {
             echo '<div style="width: 100%; margin: 10px auto; display: flex;flex-direction:column ; align-items: center;gap:10px;">';
             echo '<div style="width: 80%; margin: 10px auto; display: flex; justify-content: space-evenly; align-items: center;">';
-            echo '<img class="card-img-top w-25" src="../client/img/news/' . $news[0]['images'][0] . '" alt="' . $news[0]['titre'] . '">';
+            echo '<img class="card-img-top w-25" src="../client/img/pubs/' . $news[0]['images'][0] . '" alt="' . $news[0]['titre'] . '">';
             ?>
                      <button id="btn_img"  onclick="updateImage()" class="btn btn-primary" style="width:150px;border:none;background-color:#F41F11">Modifier la photo</button>
     
