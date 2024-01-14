@@ -33,7 +33,7 @@ class AuthController{
             session_start();
         }
     
-        if (isset($_SESSION)) session_destroy();
+        if (isset($_SESSION)) unset($_SESSION['admin']);
         header("Location: ./index.php?action=auth");
     
     }

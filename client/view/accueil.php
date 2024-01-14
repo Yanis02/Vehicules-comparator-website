@@ -10,7 +10,7 @@ class accueil {
         $currentAction = isset($_GET['action']) ? $_GET['action'] : '';
     
         ?>
-    <div style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100px; border-bottom: solid 2px #F41F11; margin-bottom:60px; position: sticky; top: 0; background-color: #fff; z-index: 1000;">
+    <div class="z-2" style="width: 100%; display: flex; justify-content: center; align-items: center; height: 100px; border-bottom: solid 2px #F41F11; margin-bottom:60px; position: sticky; top: 0; background-color: #fff;">
     
             <div>
                 <ul style="display: flex; flex-direction: row; justify-content: center; align-items: center; list-style: none; gap: 150px; font-size: 20px;">
@@ -47,7 +47,7 @@ public function header(){
             <?php echo $loggedInUser["nom"];echo " "; echo $loggedInUser["prenom"];  ?>
              </a>
 
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu z-3">
             <li><a class="dropdown-item" href="./index.php?action=profile" >Votre profile</a></li>  
             <li><a class="dropdown-item" href="./index.php?action=logoutHandler">Se deconnecter</a></li>
            </ul>
