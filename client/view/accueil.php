@@ -98,63 +98,91 @@ public function newsSection($news,$pubs){
 
  ?>
 
-    <div class="newsContainer" style="display:flex;flex-direction:column;align-items-center;width:100%;height: 400px;">
-        <?php 
-        if(empty($news) && empty($pubs)){
-            ?>
-        <p>Nothing to display</p>
-        <?php
-        } else {
-            $delay=0;
-            foreach ($news as $singleNews) {
-                ?>
-           <a href="./index.php?action=detailNews&id=<?php echo $singleNews["id"]?>"> <div class="newsItem" style="animation-delay: <?php echo $delay; ?>s;">
-                    <div class="titleContainer"> 
-                        <h2><?php echo $singleNews['title']; ?></h2>
-                    </div>
-                    <div class="imageContainer">
-                        <?php 
-                        if (!empty($singleNews['images'])) {
-                            ?>
-                            <img src="./img/news/<?php echo $singleNews['images'][0]; ?>" alt="News Image">
-                            <?php
+    
+
+
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel"
+                style="height: 300px; width:100%; margin-bottom: 40px;">
+                <div class="carousel-inner w-100" >
+                    <?php
+                    
+                    
+                    $i = 0;
+                    foreach ($news as $n) {
+                        if ($i == 0) {
+                            echo '<a style="text-decoration:none;color:white;background:black;" href="./index.php?action=detailNews&id=' . $n["id"] . '" target="blank" class="carousel-item active" data-bs-interval="2000">';
+                            echo '<div style="display:flex;justify-content:between;align-items:center">';
+
+                            echo '<img src=./img/news/' . $n["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<h1>' . $n["title"]. ' </h1>';
+                            echo '</div>';
+
+                            echo '</a>';
                         } else {
-                            ?>
-                            <p>No image available</p>
-                            <?php
+                            echo '<a style="text-decoration:none;color:white;background:black;" href="./index.php?action=detailNews&id=' . $n["id"] . '" target="blank" class="carousel-item" data-bs-interval="2000">';
+                            echo '<div style="display:flex;justify-content:between;align-items:center">';
+                            echo '<img src=./img/news/' . $n["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<h1>' . $n["title"]. ' </h1>';
+                            echo '</div>';
+
+                            echo '</a>';
                         }
-                        ?>
-                    </div>
-                </div></a>
-                <?php
-                $delay+=5;
-            }
-            foreach ($pubs as $singlePub) {
-                ?>
-              <a href="https://<?php echo $singlePub["lien"]?>">  <div class="newsItem" style="animation-delay: <?php echo $delay; ?>s;">
-                    <div class="titleContainer"> 
-                        <h2><?php echo $singlePub['titre']; ?></h2>
-                    </div>
-                    <div class="imageContainer">
-                        <?php 
-                        if (!empty($singlePub['images'])) {
-                            ?>
-                            <img src="./img/pubs/<?php echo $singlePub['images'][0]; ?>" alt="News Image">
-                            <?php
+                        
+
+                        $i++;
+
+                    }
+                    $j=0;
+                    foreach ($pubs as $pub) {
+                        if ($i == 0) {
+                            echo '<a style="text-decoration:none;color:white;background:black;" href="https://' . $pub["lien"] . '" target="blank" class="carousel-item active" data-bs-interval="2000">';
+                            echo '<div style="display:flex;justify-content:between;align-items:center">';
+
+                            echo '<img src=./img/news/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<h1>' . $pub["titre"]. ' </h1>';
+                            echo '</div>';
+
+                            echo '</a>';
                         } else {
-                            ?>
-                            <p>No image available</p>
-                            <?php
+                            echo '<a style="text-decoration:none;color:white;background:black;" href="https://' . $pub["lien"] . '" target="blank" class="carousel-item" data-bs-interval="2000">';
+                            echo '<div style="display:flex;justify-content:between;align-items:center">';
+                            echo '<img src=./img/news/' . $pub["images"][0] . ' class="d-block w-50" alt="diapo" style="height: 300px; width: 500px;" >';
+                            echo '<h1>' . $pub["titre"]. ' </h1>';
+                            echo '</div>';
+
+                            echo '</a>';
                         }
-                        ?>
-                    </div>
-                </div></a>
-                <?php
-                $delay+=5;
-            }
-        }
-        ?>
-    </div>
+                        $j++;}
+                    ?>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
       <?php  
 }
  
