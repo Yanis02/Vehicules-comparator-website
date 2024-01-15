@@ -17,11 +17,11 @@ class ContactView{
             </div>
             <div style="display:flex;justify-content:start;align-items:center;gap:50px;">
             <h3>Addresse mail :  </h3>
-              <input id="mail" style="border-radius:7px;font-size:20px;font-weight:300;width:40%;outline:none;background:white;color:black;border:none" disabled value="<?php echo $contact[0]['mail'] ?>"  >
+              <a style="color:black;text-decoration:none" href="mailto:<?php echo $contact[0]['mail']  ?>"><?php echo $contact[0]['mail'] ?></a>
             </div>
             <div style="display:flex;justify-content:start;align-items:center;gap:50px;">
             <h3>Lien Facebook :  </h3>
-              <input id="facebook" style="border-radius:7px;font-size:20px;font-weight:300;width:40%;outline:none;background:white;color:black;border:none" disabled value="<?php echo $contact[0]['facebook'] ?>"  >
+            <a style="color:black;text-decoration:none" href="<?php echo $contact[0]['facebook']  ?>"><?php echo $contact[0]['facebook'] ?></a>
             </div>
             <div style="display:flex;justify-content:start;align-items:center;gap:50px;">
             <h3>Numéro de téléphone :  </h3>

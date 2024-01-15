@@ -84,7 +84,7 @@ class Avis{
 {
     ?>
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;justify-content:center;margin-top:10px;">
-    Pas d avis pour le moment :( 
+    Pas d avis pour le moment
   </div>
   <?php
 }

@@ -28,21 +28,21 @@ class accueil {
         <?php
     }
    
-public function header(){
+public function header($contact){
     ?>
     <header>
         <div class="header" style="overflow:visible">
         <a href="./index.php?action=home"><img src="./img/assets/logo.png" style="width:200px;"></a>
         <div class="socialContainer">
-           <a href="https://www.google.com/"> <img src="./img/assets/google.png"></img></a>
-           <a href="https://www.facebook.com"><img src="./img/assets/facebook.png"></img></a>
+           <a href="mailto:<?php echo $contact[0]['mail']  ?>"> <img src="./img/assets/google.png"></img></a>
+           <a href="https://www.facebook.com/<?php echo $contact[0]['facebook']  ?>"><img src="./img/assets/facebook.png"></img></a>
            <?php
              if(isset($_SESSION['user']
              )){
                 $loggedInUser = $_SESSION['user'];
                 ?>
                 <div class="dropdown">
-           <a class="btn btn-danger dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           <a class="btn btn-danger dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
             <?php echo $loggedInUser["nom"];echo " "; echo $loggedInUser["prenom"];  ?>
              </a>
 

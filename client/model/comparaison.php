@@ -51,7 +51,7 @@ class ComparaisonModel {
         $this->db->disconnectDb($conn);
     }
     public function getTopPopularComparisons() {
-        $req = "SELECT * FROM comparaison ORDER BY popularite DESC LIMIT 3";
+        $req = "SELECT * FROM comparaison ORDER BY popularite DESC LIMIT 10";
     
         $conn = $this->db->connectDb();
         $result = $this->db->request($conn, $req);

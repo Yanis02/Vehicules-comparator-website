@@ -80,6 +80,15 @@ public function card($imageSrc, $cardTitle) {
 public function pagination($currentPage, $totalPages)
 {
     ?>
+     <style>
+        
+       
+        a.page-link {
+            background-color: #F41F11 !important;
+            border-color: white !important;
+            color: #fff !important;
+        }
+     </style>
     <nav aria-label="...">
         <ul class="pagination d-flex justify-content-center mt-5">
             <li class="page-item <?php echo $currentPage <= 1 ? 'disabled' : ''; ?> ">

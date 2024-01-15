@@ -112,7 +112,10 @@ class MarquesModel{
    public function deleteMarque($id){
     $db = new Database();
         $conn = $db->connectDb();
-        $query = "DELETE FROM marques WHERE id = '$id'";
+        $queryy = "SELECT * FROM marques WHERE id = '$id'";
+        $result= $db->request($conn, $queryy);
+        $idImg=$result[0]["idImage"];
+        $query = "DELETE FROM images WHERE id = '$idImg'";
         $db->request($conn, $query);
         $db->disconnectDb($conn);
    }

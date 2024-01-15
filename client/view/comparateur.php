@@ -212,7 +212,8 @@ public function comparaison($marques)
           }
       function submitForm() {
            let cpt = 0;
-      
+           let selectedVehicles = [];
+
        let data=[];
         for (let index = 0; index < 4; index++) {
           
@@ -223,13 +224,18 @@ public function comparaison($marques)
               res.version=$(`#version_${index}`).val();
               res.id=$(`#annee_${index}`).val();
               data.push(res);
+              selectedVehicles.push(res);
               cpt++;
           } else if (isSelected(index)) {
               alert("Please fill in all fields.");
               return;
           }
        }
-  
+       const uniqueSelections = new Set(selectedVehicles.map(JSON.stringify));
+    if (uniqueSelections.size !== selectedVehicles.length) {
+        alert("Veuillez sélectionner des véhicules différents.");
+        return;
+    }
        if (cpt >= 2) {
           //$('#comparisonForm').submit();
           console.log("passed");
@@ -460,7 +466,6 @@ public function comparaisonV($marques,$idVehicule,$idMarque,$idModele,$idVersion
 
    card.append(cardImage, cardBody);
 
-   // Append the new card to #cardContainer
    $('#cardContainer').append(card);
    }
 
@@ -587,7 +592,8 @@ public function comparaisonV($marques,$idVehicule,$idMarque,$idModele,$idVersion
        }
    function submitForm() {
         let cpt = 0;
-   
+        let selectedVehicles = [];
+
     let data=[];
      for (let index = 0; index < 4; index++) {
        
@@ -598,13 +604,18 @@ public function comparaisonV($marques,$idVehicule,$idMarque,$idModele,$idVersion
            res.version=$(`#version_${index}`).val();
            res.id=$(`#annee_${index}`).val();
            data.push(res);
+           selectedVehicles.push(res);
            cpt++;
        } else if (isSelected(index)) {
            alert("Please fill in all fields.");
            return;
        }
     }
-
+    const uniqueSelections = new Set(selectedVehicles.map(JSON.stringify));
+    if (uniqueSelections.size !== selectedVehicles.length) {
+        alert("Veuillez sélectionner des véhicules différents.");
+        return;
+    }
     if (cpt >= 2) {
        //$('#comparisonForm').submit();
        console.log("passed");
@@ -829,6 +840,7 @@ public function comparaisonPage($marques){
   
     function submitForm() {
      let cpt = 0;
+     let selectedVehicles = [];
 
  let data=[];
  for (let index = 0; index < 4; index++) {
@@ -840,12 +852,18 @@ public function comparaisonPage($marques){
         res.version=$(`#version_${index}`).val();
         res.id=$(`#annee_${index}`).val();
         data.push(res);
+        selectedVehicles.push(res);
         cpt++;
     } else if (isSelected(index)) {
-        alert("Please fill in all fields.");
+        alert("Veuillez remplir tout les champs.");
         return;
     }
  }
+ const uniqueSelections = new Set(selectedVehicles.map(JSON.stringify));
+    if (uniqueSelections.size !== selectedVehicles.length) {
+        alert("Veuillez sélectionner des véhicules différents.");
+        return;
+    }
 
  if (cpt >= 2) {
     //
@@ -915,7 +933,7 @@ public function comparaisonPage($marques){
     console.log("One or more AJAX requests failed");
  });
  } else {
-    alert("Please enter at least 2 vehicles.");
+    alert("Veuillez entrer au moin 2 vehicules.");
  }
     }        
  </script> 

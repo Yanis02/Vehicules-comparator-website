@@ -27,7 +27,9 @@ class Auth{
             <input name="prenom" style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required >
             <label for="sexe" style="margin-right:50%;">Sexe :</label>
             <select name="sexe"  style="width:70%;height:40px;padding:5px;color:#F41F11; outline:none;border-radius:5px;" required >
-                           <option value="Male">Male</option>
+            <option value="">Sexe</option>
+
+            <option value="Male">Male</option>
                            <option value="Femelle">Femelle</option>
             </select>
             <label for="date_naissance" style="margin-right:50%;">Date de naissance :</label>

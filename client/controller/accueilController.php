@@ -9,6 +9,7 @@ require_once("./view/comparateur.php");
 require_once("./model/caracteristique.php");
 require_once("./model/vehicule.php");
 require_once("./model/comparaison.php");
+require_once("./model/contact.php");
 
 
 
@@ -29,8 +30,9 @@ class accueilController{
     if (session_status() != PHP_SESSION_ACTIVE) {
         session_start();
     }
-    
-    $this->accuilModel->header();
+    $contactModel=new Contact();
+                $contact=$contactModel->getContact();
+    $this->accuilModel->header($contact);
    }
    public function showNavbar(){
     

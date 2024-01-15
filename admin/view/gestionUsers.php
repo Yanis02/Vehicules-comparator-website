@@ -33,6 +33,7 @@ class GestionUsers{
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr><th scope="col">Utilisateur</th>
+                <th scope="col">Sexe</th>
                 <th scope="col">Status</th>
                 <th scope="col">Valider</th>
                 <th scope="col">Action utilisateur</th>
@@ -43,6 +44,7 @@ class GestionUsers{
     
         foreach ($users as $user) {
             echo '<tr><td class="firstcol" scope="row">' . $user['nom'] ." " . $user['prenom'] . '</td>';
+           echo  '<td class="firstcol" scope="row">' . $user['sexe'] .'</td>';
             echo '<td class="firstcol" scope="row">';
             if ($user['valide'] == 0) {
                 echo 'Non validé';
